@@ -1,0 +1,4961 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Brand Engine</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Poppins:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+  <script type="module">
+    import imglyRemoveBackground from 'https://esm.run/@imgly/background-removal@1.5.5';
+    window.imglyRemoveBackground = imglyRemoveBackground;
+  </script>
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --brand-deep: #07223D;
+      --brand-bg: #095DC3;
+      --brand-teal: #00B2A9;
+      --brand-electric: #2896FB;
+      --brand-cta: #FFD000;
+      --brand-green: #17D94B;
+      --brand-dark: #030B17;
+      --deep-blue: #07223D;
+      --deeper-blue: #030B17;
+      --sidebar-bg: rgba(3, 11, 23, 0.65);
+      --sidebar-hover: rgba(0, 178, 169, 0.1);
+      --sidebar-active: rgba(0, 178, 169, 0.12);
+      --indigo: #095DC3;
+      --indigo-light: #2896FB;
+      --indigo-glow: #2896FB;
+      --electric-blue: #2896FB;
+      --purple: #00B2A9;
+      --glow-blue: rgba(40, 150, 251, 0.3);
+      --glow-indigo: rgba(0, 178, 169, 0.35);
+      --glow-purple: rgba(9, 93, 195, 0.2);
+      --glow-teal: rgba(0, 178, 169, 0.35);
+      --yellow-cta: #FFD000;
+      --yellow-cta-hover: #FFAA00;
+      --white: #FFFFFF;
+      --gray-50: #F8FAFC;
+      --gray-100: #F1F5F9;
+      --gray-200: #E2E8F0;
+      --gray-300: #CBD5E1;
+      --gray-400: #94A3B8;
+      --gray-500: #64748B;
+      --gray-600: #475569;
+      --gray-700: #334155;
+      --gray-800: #1E293B;
+      --gray-900: #0F172A;
+      --glass-bg: rgba(255, 255, 255, 0.04);
+      --glass-border: rgba(255, 255, 255, 0.06);
+      --glass-highlight: rgba(255, 255, 255, 0.09);
+      --radius-sm: 12px;
+      --radius-md: 16px;
+      --radius-lg: 22px;
+      --radius-xl: 28px;
+      --transition: 250ms cubic-bezier(0.4, 0, 0.2, 1);
+      --transition-slow: 400ms cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: #060B16;
+      color: var(--gray-900);
+      height: 100vh;
+      overflow: hidden;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    /* Layered background with gradient orbs */
+    .app {
+      display: flex;
+      height: 100vh;
+      position: relative;
+      background:
+        radial-gradient(ellipse 80% 60% at 15% 20%, rgba(0,178,169,0.08) 0%, transparent 50%),
+        radial-gradient(ellipse 60% 50% at 85% 80%, rgba(40,150,251,0.08) 0%, transparent 50%),
+        radial-gradient(ellipse 50% 40% at 50% 10%, rgba(9,93,195,0.07) 0%, transparent 50%),
+        linear-gradient(160deg, #030B17 0%, #07223D 40%, #0A3366 70%, #07223D 100%);
+    }
+
+    /* Subtle noise texture overlay */
+    .app::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+      background-repeat: repeat;
+      background-size: 256px 256px;
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.5;
+    }
+
+    /* ─── LEFT SIDEBAR ─── */
+    .sidebar {
+      width: 220px;
+      background: var(--sidebar-bg);
+      backdrop-filter: blur(28px) saturate(150%);
+      -webkit-backdrop-filter: blur(28px) saturate(150%);
+      display: flex;
+      flex-direction: column;
+      padding: 0;
+      flex-shrink: 0;
+      position: relative;
+      z-index: 10;
+      border-right: 1px solid var(--glass-border);
+    }
+
+    .sidebar::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse at 50% 0%, rgba(0,178,169,0.06) 0%, transparent 50%),
+        radial-gradient(ellipse at 50% 100%, rgba(40,150,251,0.04) 0%, transparent 50%),
+        linear-gradient(180deg, rgba(255,255,255,0.02) 0%, transparent 30%);
+      pointer-events: none;
+    }
+
+    .sidebar::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 1px;
+      height: 100%;
+      background: linear-gradient(to bottom, rgba(0,178,169,0.2), rgba(40,150,251,0.08), transparent 80%);
+    }
+
+    .logo {
+      padding: 26px 20px 32px;
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      position: relative;
+    }
+
+    .logo-icon {
+      width: 36px;
+      height: 36px;
+      background: linear-gradient(135deg, #095DC3, #2896FB, #00B2A9);
+      border-radius: 11px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow:
+        0 0 24px rgba(0,178,169,0.35),
+        0 0 48px rgba(9,93,195,0.15),
+        inset 0 1px 0 rgba(255,255,255,0.2);
+      position: relative;
+    }
+
+    .logo-icon::after {
+      content: '';
+      position: absolute;
+      inset: -2px;
+      border-radius: 13px;
+      background: linear-gradient(135deg, rgba(0,178,169,0.35), rgba(40,150,251,0.2));
+      z-index: -1;
+      filter: blur(6px);
+    }
+
+    .logo-icon svg { width: 18px; height: 18px; }
+
+    .logo-text {
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--white);
+      letter-spacing: -0.4px;
+    }
+
+    .logo-text span {
+      color: var(--gray-400);
+      font-weight: 400;
+      margin-left: 1px;
+    }
+
+    .sidebar-section {
+      padding: 0 12px;
+      margin-bottom: 10px;
+      position: relative;
+    }
+
+    .sidebar-section-label {
+      font-size: 10px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1.4px;
+      color: rgba(148,163,184,0.5);
+      padding: 8px 12px 12px;
+    }
+
+    .sidebar-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 11px 14px;
+      border-radius: var(--radius-md);
+      color: var(--gray-400);
+      cursor: pointer;
+      transition: all var(--transition);
+      position: relative;
+      font-size: 13.5px;
+      font-weight: 500;
+      margin-bottom: 2px;
+    }
+
+    .sidebar-item:hover {
+      color: var(--gray-200);
+      background: rgba(255,255,255,0.05);
+      box-shadow: 0 0 20px rgba(0,178,169,0.06);
+      transform: translateX(2px);
+    }
+
+    .sidebar-item.active {
+      color: var(--white);
+      background: linear-gradient(135deg, rgba(0,178,169,0.12), rgba(40,150,251,0.08));
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      box-shadow:
+        0 4px 24px rgba(0,178,169,0.1),
+        inset 0 1px 0 rgba(255,255,255,0.06),
+        inset 0 0 0 1px rgba(0,178,169,0.1);
+    }
+
+    .sidebar-item.active::before {
+      content: '';
+      position: absolute;
+      left: -12px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 3px;
+      height: 22px;
+      background: linear-gradient(to bottom, #00B2A9, #2896FB);
+      border-radius: 0 4px 4px 0;
+      box-shadow: 0 0 16px rgba(0,178,169,0.3), 0 0 32px rgba(40,150,251,0.15);
+    }
+
+    .sidebar-item.active::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: var(--radius-md);
+      background: radial-gradient(ellipse at 0% 50%, rgba(0,178,169,0.1), transparent 70%);
+      pointer-events: none;
+    }
+
+    .sidebar-item svg {
+      width: 18px;
+      height: 18px;
+      flex-shrink: 0;
+      opacity: 0.6;
+      transition: all var(--transition);
+    }
+
+    .sidebar-item:hover svg { opacity: 0.9; }
+    .sidebar-item.active svg {
+      opacity: 1;
+      filter: drop-shadow(0 0 4px rgba(0,178,169,0.4));
+    }
+
+    .sidebar-bottom {
+      margin-top: auto;
+      padding: 16px 12px;
+      border-top: 1px solid rgba(255,255,255,0.05);
+      position: relative;
+      background: linear-gradient(0deg, rgba(255,255,255,0.015) 0%, transparent 100%);
+    }
+
+    .sidebar-bottom .sidebar-item { font-size: 13px; }
+
+    /* ─── MAIN AREA ─── */
+    .main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ─── TOP TOOLBAR ─── */
+    .toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 28px;
+      position: relative;
+      z-index: 5;
+    }
+
+    .toolbar-inner {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(255,255,255,0.035);
+      backdrop-filter: blur(24px) saturate(160%);
+      -webkit-backdrop-filter: blur(24px) saturate(160%);
+      border-radius: var(--radius-lg);
+      padding: 5px;
+      border: 1px solid var(--glass-border);
+      box-shadow:
+        0 8px 32px rgba(0,0,0,0.3),
+        0 20px 60px rgba(0,0,0,0.15),
+        inset 0 1px 0 rgba(255,255,255,0.06);
+    }
+
+    .toolbar-btn {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      padding: 9px 18px;
+      border: none;
+      background: transparent;
+      border-radius: var(--radius-md);
+      font-family: inherit;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--gray-400);
+      cursor: pointer;
+      transition: all var(--transition);
+      white-space: nowrap;
+    }
+
+    .toolbar-btn:hover {
+      color: var(--white);
+      background: rgba(255,255,255,0.07);
+      transform: translateY(-1px) scale(1.01);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+
+    .toolbar-btn svg { width: 16px; height: 16px; }
+
+    .toolbar-btn.primary {
+      background: linear-gradient(135deg, #095DC3, #2896FB);
+      color: var(--white);
+      border: 1px solid rgba(40,150,251,0.2);
+      box-shadow:
+        0 2px 12px rgba(0,178,169,0.25),
+        0 0 32px rgba(9,93,195,0.15),
+        inset 0 1px 0 rgba(255,255,255,0.15);
+    }
+
+    .toolbar-btn.primary:hover {
+      transform: translateY(-1px) scale(1.02);
+      background: linear-gradient(135deg, #0A6DD8, #3AA3FF);
+      box-shadow:
+        0 4px 24px rgba(0,178,169,0.3),
+        0 0 48px rgba(9,93,195,0.2),
+        inset 0 1px 0 rgba(255,255,255,0.2);
+    }
+
+    .toolbar-btn.primary:active {
+      transform: translateY(0) scale(0.99);
+    }
+
+    .toolbar-export-wrap {
+      position: relative;
+    }
+
+    .toolbar-export-dropdown {
+      display: none;
+      position: absolute;
+      top: calc(100% + 8px);
+      right: 0;
+      min-width: 200px;
+      background: rgba(7,34,61,0.95);
+      backdrop-filter: blur(24px) saturate(150%);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 12px;
+      padding: 6px;
+      box-shadow: 0 16px 48px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.04);
+      z-index: 1000;
+    }
+
+    .toolbar-export-dropdown.open {
+      display: block;
+    }
+
+    .toolbar-export-option {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      width: 100%;
+      padding: 10px 14px;
+      background: transparent;
+      color: var(--gray-300);
+      border: none;
+      border-radius: 8px;
+      font-family: inherit;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .toolbar-export-option:hover {
+      background: rgba(255,255,255,0.08);
+      color: var(--white);
+    }
+
+    .toolbar-export-option svg {
+      width: 15px;
+      height: 15px;
+      flex-shrink: 0;
+    }
+
+    .toolbar-export-option span {
+      margin-left: auto;
+      font-size: 11px;
+      color: var(--gray-600);
+      font-weight: 400;
+    }
+
+    .toolbar-separator {
+      width: 1px;
+      height: 20px;
+      background: rgba(255,255,255,0.08);
+      margin: 0 4px;
+    }
+
+    .toolbar-right {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .toolbar-status {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      font-size: 12px;
+      color: var(--gray-500);
+      font-weight: 500;
+    }
+
+    .toolbar-status .dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #10B981;
+      box-shadow: 0 0 10px rgba(16,185,129,0.5), 0 0 20px rgba(16,185,129,0.2);
+    }
+
+    .avatar {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #095DC3, #2896FB);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all var(--transition);
+      box-shadow: 0 0 0 2px rgba(0,178,169,0.15);
+    }
+
+    .avatar:hover {
+      box-shadow: 0 0 0 3px rgba(0,178,169,0.3), 0 0 20px rgba(0,178,169,0.2);
+      transform: scale(1.05);
+    }
+
+    /* ─── WORKSPACE ─── */
+    .workspace {
+      flex: 1;
+      display: flex;
+      overflow: hidden;
+      padding: 0 24px 24px;
+      gap: 18px;
+    }
+
+    /* ─── EDITOR PANEL ─── */
+    .editor-panel {
+      width: 320px;
+      flex-shrink: 0;
+      background: rgba(255,255,255,0.03);
+      backdrop-filter: blur(28px) saturate(150%);
+      -webkit-backdrop-filter: blur(28px) saturate(150%);
+      border-radius: var(--radius-xl);
+      border: 1px solid var(--glass-border);
+      box-shadow:
+        0 20px 60px rgba(0,0,0,0.4),
+        0 8px 32px rgba(0,0,0,0.2),
+        inset 0 1px 0 rgba(255,255,255,0.05),
+        inset 0 0 40px rgba(0,178,169,0.02);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      animation: slideInLeft 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    @keyframes slideInLeft {
+      from { opacity: 0; transform: translateX(-20px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+
+    .editor-tabs {
+      display: flex;
+      padding: 14px 14px 12px;
+      gap: 4px;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+      background: rgba(255,255,255,0.01);
+    }
+
+    .editor-tab {
+      padding: 8px 14px;
+      font-size: 12.5px;
+      font-weight: 500;
+      color: var(--gray-500);
+      cursor: pointer;
+      border-radius: var(--radius-sm);
+      border-bottom: none;
+      transition: all var(--transition);
+      position: relative;
+    }
+
+    .editor-tab:hover {
+      color: var(--gray-300);
+      background: rgba(255,255,255,0.04);
+    }
+
+    .editor-tab.active {
+      color: var(--white);
+      background: rgba(0,178,169,0.12);
+      border: 1px solid rgba(0,178,169,0.18);
+      box-shadow:
+        0 0 16px rgba(0,178,169,0.08),
+        inset 0 1px 0 rgba(255,255,255,0.06);
+    }
+
+    .editor-tab.active::after {
+      content: '';
+      position: absolute;
+      inset: -2px;
+      border-radius: 12px;
+      background: radial-gradient(ellipse, rgba(0,178,169,0.1), transparent 70%);
+      z-index: -1;
+      filter: blur(8px);
+    }
+
+    .editor-content {
+      flex: 1;
+      overflow-y: auto;
+      padding: 22px 18px;
+    }
+
+    .editor-content::-webkit-scrollbar { width: 4px; }
+    .editor-content::-webkit-scrollbar-track { background: transparent; }
+    .editor-content::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.08); border-radius: 4px; }
+
+    .editor-group {
+      margin-bottom: 28px;
+    }
+
+    .editor-group-title {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--gray-500);
+      margin-bottom: 14px;
+    }
+
+    .editor-card {
+      background: rgba(255,255,255,0.025);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      border-radius: var(--radius-md);
+      padding: 16px;
+      margin-bottom: 10px;
+      border: 1px solid rgba(255,255,255,0.04);
+      transition: all var(--transition);
+    }
+
+    .editor-card:hover {
+      border-color: rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.045);
+      box-shadow: 0 8px 28px rgba(0,0,0,0.15), 0 0 0 1px rgba(255,255,255,0.06);
+      transform: translateY(-1px) scale(1.01);
+    }
+
+    .editor-card:focus-within {
+      border-color: rgba(0,178,169,0.2);
+      box-shadow: 0 0 24px rgba(0,178,169,0.06), 0 8px 28px rgba(0,0,0,0.12);
+      background: rgba(0,178,169,0.03);
+    }
+
+    .input-label {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--gray-400);
+      margin-bottom: 8px;
+      display: block;
+    }
+
+    .input-field {
+      width: 100%;
+      padding: 10px 14px;
+      background: rgba(0,0,0,0.15);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: var(--radius-sm);
+      font-family: inherit;
+      font-size: 13.5px;
+      color: var(--gray-200);
+      transition: all var(--transition);
+      outline: none;
+    }
+
+    .input-field:focus {
+      border-color: rgba(0,178,169,0.3);
+      box-shadow: 0 0 20px rgba(0,178,169,0.06);
+      background: rgba(0,0,0,0.25);
+    }
+
+    .input-field::placeholder { color: var(--gray-600); }
+
+    textarea.input-field { resize: vertical; min-height: 76px; line-height: 1.6; }
+
+    .select-field {
+      width: 100%;
+      padding: 10px 14px;
+      background: rgba(0,0,0,0.15);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: var(--radius-sm);
+      font-family: inherit;
+      font-size: 13.5px;
+      color: var(--gray-200);
+      transition: all var(--transition);
+      outline: none;
+      cursor: pointer;
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2364748B' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 12px center;
+    }
+
+    .select-field:focus {
+      border-color: rgba(0,178,169,0.3);
+      box-shadow: 0 0 0 3px rgba(0,178,169,0.08);
+    }
+
+    .style-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+    }
+
+    .style-chip {
+      padding: 7px 16px;
+      border-radius: 100px;
+      font-size: 12px;
+      font-weight: 500;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      color: var(--gray-400);
+      cursor: pointer;
+      transition: all var(--transition);
+    }
+
+    .style-chip:hover {
+      border-color: rgba(0,178,169,0.25);
+      color: #2896FB;
+      background: rgba(0,178,169,0.06);
+      box-shadow: 0 0 12px rgba(0,178,169,0.06);
+    }
+
+    .style-chip.active {
+      background: linear-gradient(135deg, rgba(9,93,195,0.8), rgba(40,150,251,0.7));
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      border-color: rgba(40,150,251,0.2);
+      color: var(--white);
+      box-shadow: 0 2px 16px rgba(0,178,169,0.2), 0 0 28px rgba(9,93,195,0.1);
+    }
+
+    .color-swatches {
+      display: flex;
+      gap: 10px;
+    }
+
+    .color-swatch {
+      width: 34px;
+      height: 34px;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      border: 2px solid transparent;
+      transition: all var(--transition);
+      position: relative;
+    }
+
+    .color-swatch:hover {
+      transform: scale(1.12);
+      box-shadow: 0 0 16px rgba(255,255,255,0.1);
+    }
+
+    .color-swatch.active {
+      border-color: #00B2A9;
+      box-shadow: 0 0 0 2px rgba(3,11,23,0.8), 0 0 0 4px #095DC3, 0 0 16px rgba(0,178,169,0.3);
+    }
+
+    /* ─── CANVAS AREA ─── */
+    .canvas-area {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      min-width: 0;
+    }
+
+    .canvas-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 0 14px;
+    }
+
+    .canvas-title {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--gray-500);
+      display: flex;
+      align-items: center;
+      gap: 9px;
+    }
+
+    .canvas-title .live-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #00B2A9;
+      box-shadow: 0 0 10px rgba(0,178,169,0.4), 0 0 24px rgba(0,178,169,0.2);
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; box-shadow: 0 0 10px rgba(0,178,169,0.4), 0 0 24px rgba(0,178,169,0.2); }
+      50% { opacity: 0.5; box-shadow: 0 0 6px rgba(0,178,169,0.3), 0 0 12px rgba(0,178,169,0.1); }
+    }
+
+    .zoom-controls {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      background: rgba(255,255,255,0.035);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-radius: var(--radius-md);
+      padding: 4px;
+      border: 1px solid var(--glass-border);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.2), inset 0 1px 0 rgba(255,255,255,0.04);
+    }
+
+    .zoom-btn {
+      width: 30px;
+      height: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: none;
+      background: transparent;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      color: var(--gray-500);
+      transition: all var(--transition);
+    }
+
+    .zoom-btn:hover {
+      background: rgba(255,255,255,0.08);
+      color: var(--gray-200);
+      transform: scale(1.05);
+    }
+
+    .zoom-btn svg { width: 14px; height: 14px; }
+
+    .zoom-level {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--gray-500);
+      min-width: 38px;
+      text-align: center;
+    }
+
+    .canvas-wrapper {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      border-radius: var(--radius-xl);
+      overflow: hidden;
+      background: rgba(255,255,255,0.015);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      border: 1px solid rgba(255,255,255,0.04);
+    }
+
+    .canvas-wrapper::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 60% 50% at 50% 45%, rgba(0,178,169,0.07) 0%, transparent 55%),
+        radial-gradient(ellipse 40% 40% at 30% 65%, rgba(40,150,251,0.05) 0%, transparent 45%),
+        radial-gradient(ellipse 40% 40% at 75% 30%, rgba(9,93,195,0.05) 0%, transparent 45%);
+      pointer-events: none;
+    }
+
+    /* Animated ambient glow behind canvas */
+    .canvas-wrapper::after {
+      content: '';
+      position: absolute;
+      width: 500px;
+      height: 400px;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background:
+        radial-gradient(ellipse, rgba(0,178,169,0.14) 0%, rgba(40,150,251,0.08) 35%, rgba(9,93,195,0.04) 55%, transparent 70%);
+      pointer-events: none;
+      animation: ambientGlow 8s ease-in-out infinite alternate;
+      filter: blur(20px);
+    }
+
+    @keyframes ambientGlow {
+      0% { opacity: 0.5; transform: translate(-50%, -50%) scale(1); }
+      100% { opacity: 0.85; transform: translate(-50%, -50%) scale(1.12); }
+    }
+
+    .canvas {
+      width: 640px;
+      height: 480px;
+      background: rgba(255,255,255,0.03);
+      backdrop-filter: blur(16px) saturate(120%);
+      -webkit-backdrop-filter: blur(16px) saturate(120%);
+      border-radius: var(--radius-lg);
+      border: 1px solid rgba(255,255,255,0.08);
+      box-shadow:
+        0 8px 32px rgba(0,0,0,0.25),
+        0 20px 60px rgba(0,0,0,0.2),
+        0 0 100px rgba(0,178,169,0.08),
+        0 0 160px rgba(40,150,251,0.05),
+        inset 0 1px 0 rgba(255,255,255,0.06),
+        inset 0 0 60px rgba(0,178,169,0.02);
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      animation: canvasFadeIn 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+      transition: all var(--transition-slow);
+    }
+
+    @keyframes canvasFadeIn {
+      from { opacity: 0; transform: scale(0.94) translateY(16px); }
+      to { opacity: 1; transform: scale(1) translateY(0); }
+    }
+
+    .canvas-glow {
+      position: absolute;
+      width: 160%;
+      height: 160%;
+      top: -30%;
+      left: -30%;
+      background:
+        radial-gradient(ellipse at 45% 45%, rgba(0,178,169,0.1) 0%, transparent 45%),
+        radial-gradient(ellipse at 60% 55%, rgba(40,150,251,0.07) 0%, transparent 50%);
+      pointer-events: none;
+      z-index: -1;
+      animation: canvasGlowPulse 6s ease-in-out infinite alternate;
+      filter: blur(10px);
+    }
+
+    @keyframes canvasGlowPulse {
+      0% { opacity: 0.6; }
+      100% { opacity: 1; }
+    }
+
+    /* ─── EMPTY STATE ─── */
+    .empty-state {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      padding: 48px;
+      animation: fadeUp 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.3s both;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .empty-icon {
+      width: 88px;
+      height: 88px;
+      border-radius: 26px;
+      background: rgba(0,178,169,0.06);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 28px;
+      position: relative;
+      border: 1px solid rgba(0,178,169,0.1);
+    }
+
+    .empty-icon::after {
+      content: '';
+      position: absolute;
+      inset: -12px;
+      border-radius: 34px;
+      background: radial-gradient(ellipse, rgba(0,178,169,0.15), rgba(40,150,251,0.07), transparent);
+      z-index: -2;
+      filter: blur(16px);
+      animation: iconGlow 4s ease-in-out infinite alternate;
+    }
+
+    @keyframes iconGlow {
+      0% { opacity: 0.5; }
+      100% { opacity: 1; }
+    }
+
+    .empty-icon svg { width: 38px; height: 38px; color: #00B2A9; }
+
+    .empty-title {
+      font-size: 22px;
+      font-weight: 700;
+      color: rgba(255,255,255,0.9);
+      margin-bottom: 10px;
+      letter-spacing: -0.5px;
+      line-height: 1.2;
+    }
+
+    .empty-sub {
+      font-size: 14.5px;
+      color: rgba(255,255,255,0.35);
+      margin-bottom: 32px;
+      max-width: 300px;
+      line-height: 1.6;
+    }
+
+    .btn-generate {
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      padding: 13px 32px;
+      background: linear-gradient(135deg, #095DC3, #2896FB);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      color: var(--white);
+      border: 1px solid rgba(40,150,251,0.2);
+      border-radius: var(--radius-md);
+      font-family: inherit;
+      font-size: 14.5px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all var(--transition);
+      box-shadow:
+        0 4px 20px rgba(0,178,169,0.2),
+        0 0 48px rgba(9,93,195,0.12),
+        inset 0 1px 0 rgba(255,255,255,0.15);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn-generate::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, transparent, rgba(255,255,255,0.12), transparent);
+      opacity: 0;
+      transition: opacity var(--transition);
+    }
+
+    .btn-generate:hover {
+      transform: translateY(-2px) scale(1.02);
+      box-shadow:
+        0 8px 36px rgba(0,178,169,0.25),
+        0 0 72px rgba(9,93,195,0.15),
+        inset 0 1px 0 rgba(255,255,255,0.2);
+    }
+
+    .btn-generate:hover::before { opacity: 1; }
+
+    .btn-generate:active { transform: translateY(0) scale(0.99); }
+
+    .btn-generate svg { width: 18px; height: 18px; }
+
+    /* ─── GENERATED STATE ─── */
+    .canvas-generated {
+      display: none;
+      width: 100%;
+      height: 100%;
+      flex-direction: column;
+      position: relative;
+    }
+
+    .canvas-generated.active { display: flex; }
+    .empty-state.hidden { display: none; }
+
+    .generated-header {
+      background: linear-gradient(135deg, rgba(6,15,31,0.9), rgba(11,30,58,0.85), rgba(19,27,46,0.9));
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      padding: 44px 52px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .generated-header::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      right: -20%;
+      width: 60%;
+      height: 200%;
+      background: radial-gradient(ellipse, rgba(0,178,169,0.15) 0%, transparent 60%);
+      pointer-events: none;
+    }
+
+    .generated-header::after {
+      content: '';
+      position: absolute;
+      bottom: -30%;
+      left: -10%;
+      width: 50%;
+      height: 150%;
+      background: radial-gradient(ellipse, rgba(40,150,251,0.1) 0%, transparent 60%);
+      pointer-events: none;
+    }
+
+    .generated-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 6px 14px;
+      background: rgba(255,255,255,0.06);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-radius: 100px;
+      font-size: 10.5px;
+      font-weight: 600;
+      color: rgba(255,255,255,0.7);
+      text-transform: uppercase;
+      letter-spacing: 1.2px;
+      margin-bottom: 22px;
+      width: fit-content;
+      border: 1px solid rgba(255,255,255,0.08);
+      box-shadow: 0 0 20px rgba(0,178,169,0.06);
+    }
+
+    .generated-badge .dot {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: var(--brand-cta);
+      box-shadow: 0 0 8px rgba(255,208,0,0.6);
+    }
+
+    .generated-headline {
+      font-size: 38px;
+      font-weight: 800;
+      color: var(--white);
+      letter-spacing: -1.2px;
+      line-height: 1.08;
+      margin-bottom: 14px;
+      position: relative;
+    }
+
+    .generated-headline span {
+      background: linear-gradient(135deg, #FFD000, #FF8C00, #2896FB);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .generated-subtext {
+      font-size: 15.5px;
+      color: rgba(255,255,255,0.45);
+      max-width: 400px;
+      line-height: 1.55;
+      position: relative;
+    }
+
+    .generated-bottom {
+      background: rgba(255,255,255,0.06);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-top: 1px solid rgba(255,255,255,0.06);
+      padding: 22px 52px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .brand-logo-preview {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 15.5px;
+      font-weight: 700;
+      color: rgba(255,255,255,0.85);
+      letter-spacing: -0.3px;
+    }
+
+    .brand-logo-box {
+      width: 38px;
+      height: 38px;
+      border-radius: var(--radius-sm);
+      background: linear-gradient(135deg, #095DC3, #2896FB);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: 800;
+      font-size: 15px;
+      box-shadow: 0 2px 8px rgba(0,178,169,0.25);
+    }
+
+    .generated-cta {
+      padding: 11px 28px;
+      background: rgba(255,208,0,0.9);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      color: #07223D;
+      border: 1px solid rgba(255,170,0,0.3);
+      border-radius: var(--radius-sm);
+      font-family: inherit;
+      font-size: 13.5px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all var(--transition);
+      box-shadow: 0 2px 12px rgba(255,208,0,0.3), 0 0 24px rgba(255,208,0,0.1);
+    }
+
+    .generated-cta:hover {
+      background: rgba(255,170,0,0.95);
+      transform: translateY(-1px) scale(1.02);
+      box-shadow: 0 4px 20px rgba(255,208,0,0.4), 0 0 40px rgba(255,208,0,0.15);
+    }
+
+    /* ─── LOADING STATE ─── */
+    .canvas-loading {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 22px;
+    }
+
+    .canvas-loading.active { display: flex; }
+
+    .loading-spinner {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      border: 3px solid rgba(0,178,169,0.1);
+      border-top-color: #00B2A9;
+      animation: spin 0.8s linear infinite;
+      box-shadow: 0 0 24px rgba(0,178,169,0.15), 0 0 48px rgba(0,178,169,0.06);
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .loading-text {
+      font-size: 14.5px;
+      color: var(--gray-400);
+      font-weight: 500;
+    }
+
+    .loading-bar {
+      width: 220px;
+      height: 3px;
+      background: rgba(255,255,255,0.05);
+      border-radius: 100px;
+      overflow: hidden;
+    }
+
+    .loading-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #095DC3, #2896FB, #00B2A9);
+      border-radius: 100px;
+      animation: loadProgress 2s ease-in-out;
+      box-shadow: 0 0 12px rgba(0,178,169,0.3), 0 0 24px rgba(0,178,169,0.08);
+    }
+
+    @keyframes loadProgress {
+      0% { width: 0%; }
+      60% { width: 80%; }
+      100% { width: 100%; }
+    }
+
+    /* ─── SCROLLBAR GLOBAL ─── */
+    ::-webkit-scrollbar { width: 5px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.06); border-radius: 6px; }
+    ::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.12); }
+
+    /* ─── RESPONSIVE ─── */
+    @media (max-width: 1100px) {
+      .editor-panel { width: 280px; }
+      .canvas { width: 480px; height: 360px; }
+    }
+
+    /* Select option styling for dark theme */
+    .select-field option {
+      background: var(--gray-900);
+      color: var(--gray-200);
+    }
+
+    /* ═══════════════════════════════════════════════════════════ */
+    /* THUMBNAIL MODE — Vertical Flow (Canva-style)               */
+    /* ═══════════════════════════════════════════════════════════ */
+
+    .thumb-workspace {
+      flex-direction: row;
+      overflow: hidden;
+      padding: 0;
+      gap: 0;
+    }
+
+    .thumb-controls {
+      width: 380px;
+      min-width: 380px;
+      overflow-y: auto;
+      overflow-x: hidden;
+      padding: 20px 28px 28px;
+      border-right: 1px solid rgba(255,255,255,0.06);
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+
+    .thumb-controls::-webkit-scrollbar { width: 5px; }
+    .thumb-controls::-webkit-scrollbar-track { background: transparent; }
+    .thumb-controls::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.06); border-radius: 6px; }
+
+    .thumb-preview {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      min-width: 0;
+      padding: 20px 24px 24px;
+    }
+
+    .thumb-preview-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 0 14px;
+    }
+
+    .thumb-preview-body {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      border-radius: var(--radius-xl);
+      overflow: hidden;
+      background: rgba(255,255,255,0.015);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      border: 1px solid rgba(255,255,255,0.04);
+    }
+
+    .thumb-preview-body::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 60% 50% at 50% 45%, rgba(0,178,169,0.07) 0%, transparent 55%),
+        radial-gradient(ellipse 40% 40% at 30% 65%, rgba(40,150,251,0.05) 0%, transparent 45%),
+        radial-gradient(ellipse 40% 40% at 75% 30%, rgba(9,93,195,0.05) 0%, transparent 45%);
+      pointer-events: none;
+    }
+
+    .thumb-preview-body::after {
+      content: '';
+      position: absolute;
+      width: 500px;
+      height: 400px;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background:
+        radial-gradient(ellipse, rgba(0,178,169,0.14) 0%, rgba(40,150,251,0.08) 35%, rgba(9,93,195,0.04) 55%, transparent 70%);
+      pointer-events: none;
+      animation: ambientGlow 8s ease-in-out infinite alternate;
+      filter: blur(20px);
+    }
+
+    /* scrollbar handled by .thumb-controls */
+
+    /* ── Shaun Selector (horizontal scroll) ── */
+    .shaun-selector {
+      padding: 20px 0 16px;
+      flex-shrink: 0;
+    }
+
+    .shaun-selector-label {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1.2px;
+      color: var(--gray-500);
+      margin-bottom: 12px;
+    }
+
+    .shaun-scroll {
+      display: flex;
+      gap: 12px;
+      overflow-x: auto;
+      padding-bottom: 6px;
+      scroll-snap-type: x mandatory;
+    }
+
+    .shaun-scroll::-webkit-scrollbar { height: 3px; }
+    .shaun-scroll::-webkit-scrollbar-track { background: transparent; }
+    .shaun-scroll::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.06); border-radius: 3px; }
+
+    .shaun-thumb {
+      flex-shrink: 0;
+      width: 88px;
+      height: 88px;
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      cursor: pointer;
+      position: relative;
+      transition: all var(--transition);
+      border: 2px solid rgba(255,255,255,0.06);
+      background: rgba(255,255,255,0.02);
+      scroll-snap-align: start;
+    }
+
+    .shaun-thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: top center;
+      transition: transform var(--transition);
+    }
+
+    .shaun-thumb:hover {
+      border-color: rgba(0,178,169,0.2);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+    }
+
+    .shaun-thumb:hover img {
+      transform: scale(1.05);
+    }
+
+    .shaun-thumb.active {
+      border-color: #00B2A9;
+      box-shadow: 0 0 0 2px rgba(3,11,23,0.8), 0 0 0 4px rgba(0,178,169,0.4), 0 8px 24px rgba(0,178,169,0.15);
+    }
+
+    .shaun-thumb .shaun-check {
+      position: absolute;
+      top: 6px;
+      right: 6px;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: #00B2A9;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transform: scale(0.6);
+      transition: all var(--transition);
+    }
+
+    .shaun-thumb.active .shaun-check {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    .shaun-thumb .shaun-check svg {
+      width: 12px;
+      height: 12px;
+      color: white;
+    }
+
+    .shaun-thumb-name {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 16px 6px 5px;
+      background: linear-gradient(transparent, rgba(0,0,0,0.7));
+      font-size: 9px;
+      font-weight: 600;
+      color: rgba(255,255,255,0.8);
+      text-align: center;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    /* ── Shaun Position Row ── */
+    .shaun-pos-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-top: 12px;
+    }
+
+    .shaun-pos-label {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--gray-500);
+      flex-shrink: 0;
+    }
+
+    .shaun-pos-buttons {
+      display: flex;
+      gap: 6px;
+    }
+
+    /* ── Input Row ── */
+    .thumb-inputs {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      padding: 8px 0 20px;
+      flex-shrink: 0;
+    }
+
+    .thumb-input-group {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .thumb-input-group label {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--gray-500);
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .thumb-input-group .input-field {
+      font-size: 15px;
+      font-weight: 600;
+      letter-spacing: -0.2px;
+      padding: 13px 16px;
+    }
+
+    .thumb-input-group .input-field.lg {
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: -0.4px;
+      padding: 14px 18px;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    .thumb-word-count {
+      font-size: 10px;
+      font-weight: 500;
+      color: var(--gray-600);
+      letter-spacing: 0;
+      text-transform: none;
+    }
+
+    /* Generate row removed — preview is live, export via toolbar */
+
+    /* Export row removed — export via toolbar dropdown */
+
+    /* ── Canvas (centered, floating) ── */
+    .thumb-canvas-wrap {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 100%;
+      height: 100%;
+      position: relative;
+      z-index: 1;
+      padding: 32px;
+    }
+
+    .thumb-canvas {
+      width: 100%;
+      max-width: 720px;
+      aspect-ratio: 16 / 9;
+      border-radius: var(--radius-lg);
+      position: relative;
+      overflow: hidden;
+      background: linear-gradient(135deg, #07223D 0%, #0A3366 50%, #095DC3 100%);
+      box-shadow:
+        0 16px 60px rgba(0,0,0,0.4),
+        0 4px 24px rgba(0,0,0,0.25),
+        0 0 80px rgba(0,178,169,0.06),
+        inset 0 1px 0 rgba(255,255,255,0.04);
+      font-family: 'Poppins', sans-serif;
+    }
+
+    .thumb-canvas-bg {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      z-index: 0;
+    }
+
+    .thumb-canvas-logo {
+      position: absolute;
+      top: 5%;
+      left: 5%;
+      height: 30px;
+      object-fit: contain;
+      z-index: 6;
+      opacity: 0.95;
+    }
+
+    /* Screenshot layer — sits behind Shaun, above background */
+    .thumb-canvas-screenshot {
+      position: absolute;
+      z-index: 1;
+      object-fit: contain;
+      transition: all 0.3s ease;
+      display: none;
+      pointer-events: none;
+    }
+
+    /* Text block — anchored bottom center */
+    .thumb-canvas-text {
+      position: absolute;
+      z-index: 4;
+      text-align: center;
+      width: 80%;
+      left: 50%;
+      bottom: 6%;
+      transform: translateX(-50%);
+    }
+
+    .thumb-canvas-headline {
+      font-family: 'Poppins', sans-serif;
+      font-weight: 900;
+      font-size: clamp(24px, 3.8vw, 48px);
+      line-height: 0.92;
+      text-transform: uppercase;
+      background: linear-gradient(180deg, #FFFFFF 30%, #B8D4F0 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      filter: drop-shadow(0 2px 8px rgba(0,0,0,0.6)) drop-shadow(0 0 30px rgba(9,93,195,0.3));
+    }
+
+    .thumb-canvas-subtext {
+      font-family: 'Poppins', sans-serif;
+      font-weight: 700;
+      font-size: clamp(10px, 1.2vw, 15px);
+      text-transform: uppercase;
+      color: var(--white);
+      margin-top: 8px;
+      letter-spacing: 2px;
+      text-shadow: 0 1px 8px rgba(0,0,0,0.5);
+    }
+
+    /* Shaun cutout — focal point, z-index above screenshot */
+    .thumb-canvas-shaun {
+      position: absolute;
+      bottom: 0;
+      z-index: 3;
+      height: 90%;
+      object-fit: contain;
+      filter: drop-shadow(0 0 28px rgba(0,178,169,0.35)) drop-shadow(0 4px 20px rgba(0,0,0,0.5));
+    }
+
+    .thumb-canvas-shaun.pos-left {
+      left: 2%;
+    }
+
+    .thumb-canvas-shaun.pos-right {
+      right: 2%;
+    }
+
+    .thumb-canvas-shaun.pos-center {
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    /* Canvas empty state */
+    .thumb-canvas-empty {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 10;
+      text-align: center;
+      gap: 8px;
+    }
+
+    .thumb-canvas-empty svg {
+      width: 32px;
+      height: 32px;
+      color: rgba(255,255,255,0.25);
+      margin-bottom: 4px;
+    }
+
+    .thumb-canvas-empty p {
+      font-size: 14px;
+      color: rgba(255,255,255,0.35);
+      font-weight: 500;
+    }
+
+    .thumb-canvas-empty span {
+      font-size: 11px;
+      color: rgba(255,255,255,0.2);
+    }
+
+    /* ── Screenshot Controls ── */
+    .thumb-screenshot-section {
+      padding: 8px 0 16px;
+      flex-shrink: 0;
+    }
+
+    .thumb-upload-zone {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 14px 16px;
+      background: rgba(255,255,255,0.025);
+      border: 1px dashed rgba(255,255,255,0.08);
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      transition: all var(--transition);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .thumb-upload-zone:hover {
+      border-color: rgba(0,178,169,0.2);
+      background: rgba(0,178,169,0.03);
+    }
+
+    .thumb-upload-zone.has-file {
+      border-style: solid;
+      border-color: rgba(0,178,169,0.15);
+      background: rgba(0,178,169,0.04);
+    }
+
+    .thumb-upload-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      background: rgba(255,255,255,0.04);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .thumb-upload-icon svg {
+      width: 16px;
+      height: 16px;
+      color: var(--gray-500);
+    }
+
+    .thumb-upload-zone.has-file .thumb-upload-icon {
+      background: rgba(0,178,169,0.1);
+    }
+
+    .thumb-upload-zone.has-file .thumb-upload-icon svg {
+      color: #00B2A9;
+    }
+
+    .thumb-upload-text {
+      font-size: 12.5px;
+      font-weight: 500;
+      color: var(--gray-400);
+    }
+
+    .thumb-upload-text span {
+      display: block;
+      font-size: 10.5px;
+      color: var(--gray-600);
+      margin-top: 2px;
+    }
+
+    .thumb-upload-remove {
+      margin-left: auto;
+      width: 24px;
+      height: 24px;
+      border: none;
+      background: rgba(255,255,255,0.06);
+      border-radius: 6px;
+      color: var(--gray-500);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all var(--transition);
+      flex-shrink: 0;
+    }
+
+    .thumb-upload-zone.has-file .thumb-upload-remove {
+      display: flex;
+    }
+
+    .thumb-upload-remove:hover {
+      background: rgba(255,77,77,0.15);
+      color: #FF4D4D;
+    }
+
+    .thumb-upload-remove svg {
+      width: 12px;
+      height: 12px;
+    }
+
+    .thumb-upload-input {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      cursor: pointer;
+    }
+
+    .thumb-upload-zone.has-file .thumb-upload-input {
+      display: none;
+    }
+
+    /* Sliders row */
+    .thumb-sliders {
+      display: none;
+      gap: 16px;
+      padding: 12px 0 0;
+    }
+
+    .thumb-sliders.visible {
+      display: flex;
+    }
+
+    .thumb-slider-group {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .thumb-slider-label {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 10px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: var(--gray-500);
+      margin-bottom: 6px;
+    }
+
+    .thumb-slider-val {
+      font-weight: 500;
+      color: var(--gray-600);
+      text-transform: none;
+      letter-spacing: 0;
+    }
+
+    .thumb-slider {
+      width: 100%;
+      height: 4px;
+      -webkit-appearance: none;
+      appearance: none;
+      background: rgba(255,255,255,0.06);
+      border-radius: 4px;
+      outline: none;
+    }
+
+    .thumb-slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: #00B2A9;
+      cursor: pointer;
+      box-shadow: 0 0 8px rgba(0,178,169,0.3);
+      transition: box-shadow var(--transition);
+    }
+
+    .thumb-slider::-webkit-slider-thumb:hover {
+      box-shadow: 0 0 14px rgba(0,178,169,0.5);
+    }
+
+    /* Position presets */
+    .thumb-pos-presets {
+      display: none;
+      gap: 6px;
+      padding: 10px 0 0;
+    }
+
+    .thumb-pos-presets.visible {
+      display: flex;
+    }
+
+    .thumb-pos-btn {
+      flex: 1;
+      padding: 6px 8px;
+      border: 1px solid rgba(255,255,255,0.06);
+      background: rgba(255,255,255,0.02);
+      border-radius: 8px;
+      font-family: inherit;
+      font-size: 10px;
+      font-weight: 600;
+      color: var(--gray-500);
+      cursor: pointer;
+      transition: all var(--transition);
+      text-align: center;
+    }
+
+    .thumb-pos-btn:hover {
+      border-color: rgba(0,178,169,0.15);
+      color: var(--gray-300);
+      background: rgba(0,178,169,0.04);
+    }
+
+    .thumb-pos-btn.active {
+      border-color: rgba(0,178,169,0.25);
+      color: #00B2A9;
+      background: rgba(0,178,169,0.08);
+    }
+
+    /* ── Output Strip (below canvas) ── */
+    .thumb-output-strip {
+      padding: 0 0 24px;
+      flex-shrink: 0;
+    }
+
+    .thumb-output-strip-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 14px;
+    }
+
+    .thumb-output-strip-title {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--gray-400);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .thumb-output-strip-count {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--gray-500);
+      background: rgba(255,255,255,0.04);
+      padding: 3px 10px;
+      border-radius: 100px;
+      border: 1px solid rgba(255,255,255,0.05);
+    }
+
+    .thumb-results-scroll {
+      display: flex;
+      gap: 12px;
+      overflow-x: auto;
+      padding-bottom: 8px;
+      scroll-snap-type: x mandatory;
+    }
+
+    .thumb-results-scroll::-webkit-scrollbar { height: 3px; }
+    .thumb-results-scroll::-webkit-scrollbar-track { background: transparent; }
+    .thumb-results-scroll::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.06); border-radius: 3px; }
+
+    .thumb-result-card {
+      flex-shrink: 0;
+      width: 220px;
+      aspect-ratio: 16 / 9;
+      border-radius: var(--radius-sm);
+      overflow: hidden;
+      position: relative;
+      cursor: pointer;
+      transition: all var(--transition);
+      background: rgba(255,255,255,0.02);
+      border: 1px solid rgba(255,255,255,0.05);
+      scroll-snap-align: start;
+    }
+
+    .thumb-result-card:hover {
+      transform: translateY(-3px) scale(1.02);
+      box-shadow: 0 12px 36px rgba(0,0,0,0.35), 0 0 20px rgba(0,178,169,0.06);
+      border-color: rgba(0,178,169,0.15);
+    }
+
+    .thumb-result-card img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    /* Download button on hover */
+    .thumb-result-card .thumb-dl-btn {
+      position: absolute;
+      bottom: 6px;
+      right: 6px;
+      width: 28px;
+      height: 28px;
+      border-radius: 8px;
+      border: none;
+      background: rgba(0,178,169,0.6);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      opacity: 0;
+      transform: translateY(4px);
+      transition: all var(--transition);
+      z-index: 5;
+    }
+
+    .thumb-result-card:hover .thumb-dl-btn {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .thumb-result-card .thumb-dl-btn:hover {
+      background: rgba(0,178,169,0.85);
+    }
+
+    .thumb-result-card .thumb-dl-btn svg {
+      width: 14px;
+      height: 14px;
+    }
+
+    /* Empty results state */
+    .thumb-results-empty {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100px;
+      color: var(--gray-600);
+      font-size: 13px;
+      font-weight: 500;
+    }
+
+    /* ── Sidebar disabled / coming soon ── */
+    .sidebar-item.disabled {
+      cursor: not-allowed;
+      opacity: 0.4;
+      pointer-events: none;
+    }
+
+    .sidebar-badge {
+      font-size: 9px;
+      font-weight: 600;
+      background: rgba(255,255,255,0.06);
+      padding: 2px 7px;
+      border-radius: 6px;
+      margin-left: auto;
+      color: var(--gray-500);
+      letter-spacing: 0.3px;
+      flex-shrink: 0;
+    }
+
+    @media (max-width: 1100px) {
+      .thumb-controls { width: 320px; min-width: 320px; padding: 16px 20px 20px; }
+    }
+
+    /* ═══════════════════════════════════════════════════════════ */
+    /* TEMPLATE PICKER — PREMIUM                                  */
+    /* ═══════════════════════════════════════════════════════════ */
+
+    /* Template workspace — 2-column */
+    .tpl-workspace {
+      flex-direction: row;
+      overflow: hidden;
+      padding: 0;
+      gap: 0;
+    }
+
+    /* ── Left panel ── */
+    .tpl-controls {
+      width: 400px;
+      min-width: 400px;
+      overflow-y: auto;
+      overflow-x: hidden;
+      padding: 16px 24px 28px;
+      border-right: 1px solid rgba(255,255,255,0.04);
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      position: relative;
+    }
+
+    /* (bottom fade removed — was causing black bar) */
+
+    .tpl-controls::-webkit-scrollbar { width: 4px; }
+    .tpl-controls::-webkit-scrollbar-track { background: transparent; }
+    .tpl-controls::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.04); border-radius: 4px; }
+
+    .tpl-controls-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--white);
+      margin-bottom: 1px;
+      letter-spacing: -0.2px;
+    }
+
+    .tpl-controls-sub {
+      font-size: 11.5px;
+      color: var(--gray-600);
+      margin-bottom: 16px;
+    }
+
+    /* ── Right panel ── */
+    .tpl-preview {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      min-width: 0;
+      padding: 20px 24px 24px;
+    }
+
+    /* ── Step labels ── */
+    .tpl-step-label {
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: var(--gray-600);
+      margin-bottom: 10px;
+    }
+
+    /* ═══════════════════════════════════════════════════════ */
+    /* FORMAT + SIZE — unified segmented controls              */
+    /* ═══════════════════════════════════════════════════════ */
+
+    /* ── Format cards — vertical icon + label ── */
+    .tpl-categories {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+
+    .tpl-cat-card {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      padding: 14px 8px 12px;
+      background: rgba(255,255,255,0.015);
+      border: 1px solid rgba(255,255,255,0.04);
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Ambient shimmer on each card */
+    .tpl-cat-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: 12px;
+      opacity: 0;
+      transition: opacity 0.35s ease;
+      pointer-events: none;
+    }
+
+    .tpl-cat-card[data-cat="social"]::before {
+      background: radial-gradient(circle at 50% 30%, rgba(0,178,169,0.08), transparent 70%);
+    }
+    .tpl-cat-card[data-cat="ads"]::before {
+      background: radial-gradient(circle at 50% 30%, rgba(99,102,241,0.08), transparent 70%);
+    }
+    .tpl-cat-card[data-cat="presentation"]::before {
+      background: radial-gradient(circle at 50% 30%, rgba(244,163,59,0.08), transparent 70%);
+    }
+
+    .tpl-cat-card:hover {
+      background: rgba(255,255,255,0.03);
+      border-color: rgba(255,255,255,0.07);
+      transform: translateY(-2px);
+    }
+
+    .tpl-cat-card:hover::before {
+      opacity: 0.6;
+    }
+
+    .tpl-cat-card.active {
+      background: rgba(255,255,255,0.025);
+      border-color: rgba(0,178,169,0.25);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 24px rgba(0,0,0,0.2), 0 0 20px rgba(0,178,169,0.06);
+    }
+
+    .tpl-cat-card.active::before {
+      opacity: 1;
+    }
+
+    /* Bottom glow line on active */
+    .tpl-cat-card::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 20%;
+      right: 20%;
+      height: 2px;
+      border-radius: 2px;
+      background: #00B2A9;
+      opacity: 0;
+      transform: scaleX(0);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .tpl-cat-card.active::after {
+      opacity: 1;
+      transform: scaleX(1);
+      box-shadow: 0 0 8px rgba(0,178,169,0.4);
+    }
+
+    /* Icon circle */
+    .tpl-cat-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.04);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      transition: all 0.3s ease;
+      position: relative;
+      z-index: 1;
+    }
+
+    .tpl-cat-card:hover .tpl-cat-icon {
+      border-color: rgba(255,255,255,0.08);
+    }
+
+    .tpl-cat-card.active .tpl-cat-icon {
+      background: rgba(0,178,169,0.1);
+      border-color: rgba(0,178,169,0.2);
+      box-shadow: 0 0 16px rgba(0,178,169,0.12);
+    }
+
+    .tpl-cat-icon svg {
+      width: 16px;
+      height: 16px;
+      color: var(--gray-500);
+      transition: all 0.3s ease;
+    }
+
+    .tpl-cat-card.active .tpl-cat-icon svg {
+      color: #00B2A9;
+      filter: drop-shadow(0 0 4px rgba(0,178,169,0.4));
+    }
+
+    /* Label */
+    .tpl-cat-name {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--gray-500);
+      transition: color 0.3s ease;
+      letter-spacing: 0.2px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .tpl-cat-card.active .tpl-cat-name {
+      color: var(--white);
+    }
+
+    /* Size dropdown — compact select */
+    .tpl-sizes {
+      margin-bottom: 14px;
+      position: relative;
+    }
+
+    .tpl-size-select {
+      width: 100%;
+      padding: 10px 38px 10px 14px;
+      background: rgba(255,255,255,0.025);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 10px;
+      font-family: inherit;
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--white);
+      cursor: pointer;
+      transition: all 0.25s ease;
+      outline: none;
+      appearance: none;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='rgba(255,255,255,0.3)' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 14px center;
+    }
+
+    .tpl-size-select:hover {
+      border-color: rgba(255,255,255,0.1);
+      background-color: rgba(255,255,255,0.04);
+    }
+
+    .tpl-size-select:focus {
+      border-color: rgba(0,178,169,0.3);
+      background-color: rgba(0,178,169,0.04);
+      box-shadow: 0 0 12px rgba(0,178,169,0.06);
+    }
+
+    .tpl-size-select option {
+      background: #0a1628;
+      color: var(--white);
+      padding: 8px;
+    }
+
+    /* ═══════════════════════════════════════════════════════ */
+    /* TEMPLATE GRID — floating visual-first cards             */
+    /* ═══════════════════════════════════════════════════════ */
+
+    .tpl-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      position: relative;
+      padding-bottom: 4px;
+    }
+
+    /* subtle glow behind the grid area */
+    .tpl-grid::before {
+      content: '';
+      position: absolute;
+      top: -20px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 80%;
+      height: 60%;
+      background: radial-gradient(ellipse, rgba(0,178,169,0.04) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* stagger fade-in animation */
+    @keyframes tplCardReveal {
+      from {
+        opacity: 0;
+        transform: translateY(12px) scale(0.97);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    .tpl-card {
+      border-radius: 12px;
+      overflow: hidden;
+      background: rgba(255,255,255,0.015);
+      border: 1px solid rgba(255,255,255,0.04);
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      z-index: 1;
+      animation: tplCardReveal 0.4s cubic-bezier(0.4, 0, 0.2, 1) backwards;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.15), 0 0 0 0 rgba(0,178,169,0);
+    }
+
+    .tpl-card:nth-child(1) { animation-delay: 0.03s; }
+    .tpl-card:nth-child(2) { animation-delay: 0.08s; }
+    .tpl-card:nth-child(3) { animation-delay: 0.13s; }
+    .tpl-card:nth-child(4) { animation-delay: 0.18s; }
+
+    .tpl-card:hover {
+      border-color: rgba(255,255,255,0.08);
+      transform: translateY(-4px) scale(1.03);
+      box-shadow: 0 16px 40px rgba(0,0,0,0.35), 0 0 20px rgba(0,178,169,0.06);
+      z-index: 2;
+    }
+
+    .tpl-card.active {
+      border-color: rgba(0,178,169,0.35);
+      box-shadow: 0 8px 32px rgba(0,0,0,0.3), 0 0 24px rgba(0,178,169,0.12), inset 0 0 0 1px rgba(0,178,169,0.1);
+      transform: scale(1.02);
+    }
+
+    .tpl-card.active:hover {
+      transform: translateY(-4px) scale(1.04);
+    }
+
+    .tpl-card-preview {
+      width: 100%;
+      aspect-ratio: var(--tpl-ratio, 1);
+      max-height: 180px;
+      background: linear-gradient(135deg, #07223D 0%, #0A3366 50%, #095DC3 100%);
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .tpl-card-preview img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .tpl-card:hover .tpl-card-preview img {
+      transform: scale(1.06);
+    }
+
+    .tpl-card-preview .tpl-card-overlay {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 14px;
+      text-align: center;
+      z-index: 2;
+      background: linear-gradient(180deg, transparent 20%, rgba(0,0,0,0.15) 100%);
+    }
+
+    .tpl-card-preview .tpl-card-headline {
+      font-family: 'Poppins', sans-serif;
+      font-weight: 800;
+      font-size: 10px;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.85);
+      line-height: 1.15;
+      text-shadow: 0 1px 8px rgba(0,0,0,0.5);
+      letter-spacing: 0.3px;
+    }
+
+    .tpl-card-preview .tpl-card-sub {
+      font-size: 7px;
+      font-weight: 600;
+      color: rgba(255,255,255,0.35);
+      text-transform: uppercase;
+      letter-spacing: 1.2px;
+      margin-top: 3px;
+    }
+
+    .tpl-card-info {
+      padding: 8px 10px 9px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .tpl-card-name {
+      font-size: 10px;
+      font-weight: 600;
+      color: var(--gray-500);
+      letter-spacing: 0.1px;
+    }
+
+    .tpl-card.active .tpl-card-name {
+      color: rgba(0,178,169,0.8);
+    }
+
+    /* ═══════════════════════════════════════════════════════ */
+    /* RIGHT PANEL — STAGE + PREVIEW                           */
+    /* ═══════════════════════════════════════════════════════ */
+
+    /* Stage wrapper — fills right panel, centers content vertically */
+    .tpl-preview-stage {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+      border-radius: 16px;
+      background: radial-gradient(ellipse 80% 60% at 50% 45%, rgba(0,178,169,0.03) 0%, transparent 65%),
+                  radial-gradient(ellipse 60% 80% at 60% 55%, rgba(9,93,195,0.04) 0%, transparent 60%);
+    }
+
+    /* Ambient glow behind stage */
+    .tpl-preview-stage::before {
+      content: '';
+      position: absolute;
+      top: 30%;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 500px;
+      height: 400px;
+      background: radial-gradient(ellipse, rgba(0,178,169,0.06) 0%, rgba(9,93,195,0.03) 40%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+      filter: blur(40px);
+      opacity: 0;
+      transition: opacity 0.6s ease;
+    }
+
+    /* Activate glow when a template is selected */
+    .tpl-preview-stage.has-selection::before {
+      opacity: 1;
+    }
+
+    /* Subtle edge vignette */
+    .tpl-preview-stage::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: 16px;
+      box-shadow: inset 0 0 80px rgba(0,0,0,0.15);
+      pointer-events: none;
+      z-index: 5;
+    }
+
+    /* ── Canvas — active template preview ── */
+    .tpl-preview-canvas {
+      position: relative;
+      width: 100%;
+      max-width: 680px;
+      margin: 0 auto;
+      aspect-ratio: var(--tpl-preview-ratio, 1 / 1);
+      border-radius: 14px;
+      overflow: hidden;
+      background: rgba(255,255,255,0.01);
+      transition: aspect-ratio 0.5s cubic-bezier(0.4, 0, 0.2, 1),
+                  box-shadow 0.5s ease,
+                  transform 0.5s ease;
+      z-index: 2;
+      box-shadow: 0 4px 30px rgba(0,0,0,0.15);
+    }
+
+    .tpl-preview-stage.has-selection .tpl-preview-canvas {
+      box-shadow: 0 8px 50px rgba(0,0,0,0.3),
+                  0 0 40px rgba(0,178,169,0.06),
+                  0 0 100px rgba(9,93,195,0.04);
+    }
+
+    /* Format badge — shows selected size on canvas */
+    .tpl-preview-format-badge {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      padding: 4px 10px;
+      background: rgba(0,0,0,0.5);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 6px;
+      font-size: 9px;
+      font-weight: 600;
+      color: rgba(255,255,255,0.5);
+      letter-spacing: 0.5px;
+      z-index: 10;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      pointer-events: none;
+    }
+
+    .tpl-preview-stage.has-selection .tpl-preview-format-badge {
+      opacity: 1;
+    }
+
+    /* ── Empty state — rich visual landing ── */
+    .tpl-preview-empty {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 2;
+      transition: opacity 0.4s ease;
+    }
+
+    .tpl-empty-icon {
+      width: 64px;
+      height: 64px;
+      border-radius: 20px;
+      background: linear-gradient(135deg, rgba(0,178,169,0.08), rgba(9,93,195,0.08));
+      border: 1px solid rgba(0,178,169,0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 20px;
+      box-shadow: 0 0 30px rgba(0,178,169,0.06);
+    }
+
+    .tpl-empty-icon svg {
+      width: 28px;
+      height: 28px;
+      color: rgba(0,178,169,0.5);
+    }
+
+    .tpl-empty-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--white);
+      margin-bottom: 6px;
+      letter-spacing: -0.2px;
+    }
+
+    .tpl-empty-sub {
+      font-size: 12.5px;
+      color: var(--gray-500);
+      margin-bottom: 24px;
+      text-align: center;
+      line-height: 1.5;
+    }
+
+    .tpl-empty-cta {
+      padding: 10px 24px;
+      background: linear-gradient(135deg, rgba(0,178,169,0.12), rgba(0,178,169,0.06));
+      border: 1px solid rgba(0,178,169,0.2);
+      border-radius: 10px;
+      font-family: inherit;
+      font-size: 12px;
+      font-weight: 600;
+      color: #00B2A9;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      margin-bottom: 40px;
+    }
+
+    .tpl-empty-cta:hover {
+      background: linear-gradient(135deg, rgba(0,178,169,0.18), rgba(0,178,169,0.1));
+      border-color: rgba(0,178,169,0.35);
+      box-shadow: 0 0 20px rgba(0,178,169,0.1);
+      transform: translateY(-1px);
+    }
+
+    /* ── Active preview layers ── */
+    .tpl-preview-bg {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      z-index: 1;
+      animation: tplFadeIn 0.4s ease;
+    }
+
+    @keyframes tplFadeIn {
+      from { opacity: 0; transform: scale(1.03); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    .tpl-preview-overlay {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 10%;
+      text-align: center;
+      z-index: 3;
+      animation: tplFadeIn 0.5s 0.1s ease backwards;
+    }
+
+    .tpl-preview-headline {
+      font-family: 'Poppins', 'Inter', sans-serif;
+      font-weight: 900;
+      font-size: clamp(20px, 3.5vw, 44px);
+      text-transform: uppercase;
+      color: var(--white);
+      line-height: 0.93;
+      text-shadow: 0 2px 16px rgba(0,0,0,0.6);
+      letter-spacing: -0.5px;
+    }
+
+    .tpl-preview-sub {
+      font-size: clamp(10px, 1.5vw, 16px);
+      font-weight: 700;
+      color: rgba(255,255,255,0.45);
+      text-transform: uppercase;
+      letter-spacing: 2.5px;
+      margin-top: 10px;
+    }
+
+    .tpl-card-meta {
+      font-size: 9px;
+      color: var(--gray-600);
+      font-weight: 400;
+      font-variant-numeric: tabular-nums;
+    }
+
+    /* ── Template Image Upload Section ── */
+    .tpl-upload-section {
+      display: none;
+      flex-direction: column;
+      gap: 0;
+      margin-top: 24px;
+      padding-top: 20px;
+      border-top: 1px solid rgba(255,255,255,0.04);
+    }
+
+    .tpl-upload-section.visible {
+      display: flex;
+    }
+
+    .tpl-upload-zone {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 14px 16px;
+      background: rgba(255,255,255,0.025);
+      border: 1px dashed rgba(255,255,255,0.08);
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .tpl-upload-zone:hover {
+      border-color: rgba(0,178,169,0.2);
+      background: rgba(0,178,169,0.03);
+    }
+
+    .tpl-upload-zone.has-file {
+      border-style: solid;
+      border-color: rgba(0,178,169,0.15);
+      background: rgba(0,178,169,0.04);
+    }
+
+    .tpl-upload-zone .tpl-upload-input {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      cursor: pointer;
+    }
+
+    .tpl-upload-zone.has-file .tpl-upload-input {
+      display: none;
+    }
+
+    .tpl-upload-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      background: rgba(255,255,255,0.04);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .tpl-upload-icon svg {
+      width: 16px;
+      height: 16px;
+      color: var(--gray-500);
+    }
+
+    .tpl-upload-zone.has-file .tpl-upload-icon {
+      background: rgba(0,178,169,0.1);
+    }
+
+    .tpl-upload-zone.has-file .tpl-upload-icon svg {
+      color: #00B2A9;
+    }
+
+    .tpl-upload-text {
+      font-size: 12.5px;
+      font-weight: 500;
+      color: var(--gray-400);
+      flex: 1;
+      min-width: 0;
+    }
+
+    .tpl-upload-text span {
+      display: block;
+      font-size: 10.5px;
+      color: var(--gray-600);
+      margin-top: 2px;
+    }
+
+    .tpl-upload-remove {
+      margin-left: auto;
+      width: 24px;
+      height: 24px;
+      border: none;
+      background: rgba(255,255,255,0.06);
+      border-radius: 6px;
+      color: var(--gray-500);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      flex-shrink: 0;
+    }
+
+    .tpl-upload-zone.has-file .tpl-upload-remove {
+      display: flex;
+    }
+
+    .tpl-upload-remove:hover {
+      background: rgba(255,77,77,0.15);
+      color: #FF4D4D;
+    }
+
+    .tpl-upload-remove svg {
+      width: 12px;
+      height: 12px;
+    }
+
+    /* ── Image Controls (scale, position, bg removal) ── */
+    .tpl-img-controls {
+      display: none;
+      flex-direction: column;
+      gap: 14px;
+      padding-top: 16px;
+    }
+
+    .tpl-img-controls.visible {
+      display: flex;
+    }
+
+    .tpl-img-slider-row {
+      display: flex;
+      gap: 14px;
+    }
+
+    .tpl-img-slider-group {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .tpl-img-slider-label {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--gray-500);
+      margin-bottom: 6px;
+    }
+
+    .tpl-img-slider-val {
+      font-weight: 600;
+      color: var(--gray-400);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .tpl-img-slider {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 100%;
+      height: 4px;
+      border-radius: 4px;
+      background: rgba(255,255,255,0.06);
+      outline: none;
+    }
+
+    .tpl-img-slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: #00B2A9;
+      cursor: pointer;
+      border: 2px solid rgba(0,0,0,0.3);
+      box-shadow: 0 0 8px rgba(0,178,169,0.3);
+    }
+
+    /* Position presets row */
+    .tpl-img-pos-row {
+      display: flex;
+      gap: 6px;
+    }
+
+    .tpl-img-pos-btn {
+      flex: 1;
+      padding: 7px 0;
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 8px;
+      background: rgba(255,255,255,0.025);
+      font-family: inherit;
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--gray-500);
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-align: center;
+    }
+
+    .tpl-img-pos-btn:hover {
+      background: rgba(255,255,255,0.05);
+      color: var(--gray-300);
+    }
+
+    .tpl-img-pos-btn.active {
+      background: rgba(0,178,169,0.1);
+      border-color: rgba(0,178,169,0.3);
+      color: var(--white);
+    }
+
+    /* BG removal button */
+    .tpl-bg-remove-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 10px 16px;
+      border: 1px solid rgba(0,178,169,0.2);
+      border-radius: 10px;
+      background: rgba(0,178,169,0.06);
+      font-family: inherit;
+      font-size: 12px;
+      font-weight: 600;
+      color: #00B2A9;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .tpl-bg-remove-btn:hover {
+      background: rgba(0,178,169,0.12);
+      border-color: rgba(0,178,169,0.35);
+    }
+
+    .tpl-bg-remove-btn:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+
+    .tpl-bg-remove-btn svg {
+      width: 14px;
+      height: 14px;
+    }
+
+    .tpl-bg-remove-btn .spinner {
+      width: 14px;
+      height: 14px;
+      border: 2px solid rgba(0,178,169,0.2);
+      border-top-color: #00B2A9;
+      border-radius: 50%;
+      animation: tplSpin 0.6s linear infinite;
+    }
+
+    @keyframes tplSpin {
+      to { transform: rotate(360deg); }
+    }
+
+    .tpl-bg-status {
+      font-size: 10.5px;
+      color: var(--gray-600);
+      text-align: center;
+      margin-top: -4px;
+    }
+
+    .tpl-bg-status.success {
+      color: rgba(0,178,169,0.7);
+    }
+
+    /* ── Headline / Subtext inputs for template ── */
+    .tpl-text-section {
+      display: none;
+      flex-direction: column;
+      gap: 12px;
+      margin-top: 16px;
+      padding-top: 16px;
+      border-top: 1px solid rgba(255,255,255,0.04);
+    }
+
+    .tpl-text-section.visible {
+      display: flex;
+    }
+
+    .tpl-text-group label {
+      display: block;
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: var(--gray-500);
+      margin-bottom: 6px;
+    }
+
+    .tpl-text-input {
+      width: 100%;
+      padding: 10px 14px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 10px;
+      color: var(--white);
+      font-family: inherit;
+      font-size: 13px;
+      font-weight: 500;
+      outline: none;
+      transition: all 0.2s ease;
+    }
+
+    .tpl-text-input:focus {
+      border-color: rgba(0,178,169,0.3);
+      background: rgba(0,178,169,0.03);
+    }
+
+    .tpl-text-input::placeholder {
+      color: var(--gray-600);
+    }
+
+    .tpl-text-input.lg {
+      font-size: 15px;
+      font-weight: 700;
+      padding: 12px 14px;
+    }
+
+    /* ── Preview image layer ── */
+    .tpl-preview-img {
+      position: absolute;
+      z-index: 2;
+      object-fit: contain;
+      pointer-events: none;
+      transition: all 0.3s ease;
+    }
+
+    @media (max-width: 1100px) {
+      .tpl-controls { width: 340px; min-width: 340px; padding: 14px 18px 20px; }
+      .tpl-preview-canvas { max-width: 100%; }
+      .tpl-cat-card { padding: 10px 6px 9px; }
+      .tpl-cat-name { font-size: 10px; }
+      .tpl-cat-icon { width: 30px; height: 30px; }
+      .tpl-cat-icon svg { width: 14px; height: 14px; }
+    }
+
+    /* Hidden state for sections */
+    .tpl-section-hidden {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <!-- SIDEBAR -->
+    <nav class="sidebar">
+      <div class="logo">
+        <div class="logo-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="12 2 22 8.5 22 15.5 12 22 2 15.5 2 8.5 12 2"/>
+            <line x1="12" y1="22" x2="12" y2="15.5"/>
+            <polyline points="22 8.5 12 15.5 2 8.5"/>
+          </svg>
+        </div>
+        <div class="logo-text">Brand<span>Engine</span></div>
+      </div>
+
+      <div class="sidebar-section">
+        <div class="sidebar-section-label">Create</div>
+        <div class="sidebar-item active" data-page="templates">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="3" width="18" height="18" rx="2"/>
+            <path d="M3 9h18"/>
+            <path d="M9 21V9"/>
+          </svg>
+          Templates
+        </div>
+        <div class="sidebar-item" data-page="ai-image">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+          </svg>
+          AI Image
+        </div>
+      </div>
+
+      <div class="sidebar-section">
+        <div class="sidebar-section-label">Creative Packs</div>
+        <div class="sidebar-item" data-page="shaun-thumbnails">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="2" y="3" width="20" height="14" rx="2"/>
+            <circle cx="7.5" cy="10" r="1.5"/>
+            <path d="M22 13l-4-4-5 5"/>
+          </svg>
+          Shaun Comin Atcha
+        </div>
+        <div class="sidebar-item disabled">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+            <circle cx="9" cy="7" r="4"/>
+            <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+            <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+          </svg>
+          Content Army
+          <span class="sidebar-badge">Soon</span>
+        </div>
+        <div class="sidebar-item disabled">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+          </svg>
+          Super Promo
+          <span class="sidebar-badge">Soon</span>
+        </div>
+        <div class="sidebar-item disabled">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/>
+            <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
+          </svg>
+          Master Class
+          <span class="sidebar-badge">Soon</span>
+        </div>
+        <div class="sidebar-item disabled">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+            <polyline points="22 4 12 14.01 9 11.01"/>
+          </svg>
+          Certified Admin
+          <span class="sidebar-badge">Soon</span>
+        </div>
+      </div>
+
+      <div class="sidebar-bottom">
+        <div class="sidebar-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="3"/>
+            <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+          </svg>
+          Settings
+        </div>
+        <div class="sidebar-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"/>
+            <path d="M12 16v-4"/>
+            <path d="M12 8h.01"/>
+          </svg>
+          Help
+        </div>
+      </div>
+    </nav>
+
+    <!-- MAIN -->
+    <div class="main">
+      <!-- TOOLBAR -->
+      <div class="toolbar">
+        <div class="toolbar-inner">
+          <button class="toolbar-btn primary" id="generateBtn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+            </svg>
+            Generate
+          </button>
+          <div class="toolbar-separator"></div>
+          <button class="toolbar-btn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
+              <polyline points="17 21 17 13 7 13 7 21"/>
+              <polyline points="7 3 7 8 15 8"/>
+            </svg>
+            Save
+          </button>
+          <button class="toolbar-btn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="9" y="9" width="13" height="13" rx="2"/>
+              <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+            </svg>
+            Duplicate
+          </button>
+          <div class="toolbar-export-wrap" id="toolbarExportWrap">
+            <button class="toolbar-btn" id="toolbarExportBtn">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                <polyline points="7 10 12 15 17 10"/>
+                <line x1="12" y1="15" x2="12" y2="3"/>
+              </svg>
+              Export
+            </button>
+            <div class="toolbar-export-dropdown" id="toolbarExportDropdown">
+              <button class="toolbar-export-option" data-export-format="png">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                PNG <span>1280 x 720</span>
+              </button>
+              <button class="toolbar-export-option" data-export-format="jpeg">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                JPEG <span>1280 x 720 · 92%</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="toolbar-right">
+          <div class="toolbar-status">
+            <div class="dot"></div>
+            Auto-saved
+          </div>
+          <div class="avatar">LD</div>
+        </div>
+      </div>
+
+      <!-- WORKSPACE: DESIGN MODE — Two Column Template Picker -->
+      <div class="workspace tpl-workspace" id="designWorkspace">
+
+        <!-- LEFT: Controls -->
+        <div class="tpl-controls">
+          <div class="tpl-controls-title">Create something new</div>
+          <div class="tpl-controls-sub">Pick a format, size, then a template.</div>
+
+          <!-- Format + Size — unified control group -->
+          <div class="tpl-categories" id="tplCategories">
+            <div class="tpl-cat-card active" data-cat="social">
+              <div class="tpl-cat-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                  <path d="M8 10a2 2 0 1 0 0-4 2 2 0 0 0 0 4z"/>
+                  <path d="M22 14l-4.5-4.5L11 16"/>
+                  <path d="M7.5 16l2-2L11 16"/>
+                </svg>
+              </div>
+              <div class="tpl-cat-name">Social</div>
+            </div>
+            <div class="tpl-cat-card" data-cat="ads">
+              <div class="tpl-cat-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="2" y="3" width="20" height="14" rx="2"/>
+                  <path d="M8 21h8"/>
+                  <path d="M12 17v4"/>
+                </svg>
+              </div>
+              <div class="tpl-cat-name">Ads</div>
+            </div>
+            <div class="tpl-cat-card" data-cat="presentation">
+              <div class="tpl-cat-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="2" y="3" width="20" height="14" rx="2"/>
+                  <path d="M12 17v4"/>
+                  <path d="M8 21h8"/>
+                  <path d="M7 8h5"/>
+                  <path d="M7 11h3"/>
+                </svg>
+              </div>
+              <div class="tpl-cat-name">Presentation</div>
+            </div>
+          </div>
+
+          <div class="tpl-sizes" id="tplSizes"></div>
+
+          <!-- Templates -->
+          <div class="tpl-step-label" id="tplGridLabel" style="display:none">Choose a style</div>
+          <div class="tpl-grid" id="tplGrid"></div>
+
+          <!-- Headline + Subtext (visible after template selected) -->
+          <div class="tpl-text-section" id="tplTextSection">
+            <div class="tpl-step-label">Text</div>
+            <div class="tpl-text-group">
+              <label>Headline</label>
+              <input class="tpl-text-input lg" id="tplHeadlineInput" type="text" placeholder="Enter bold headline..." maxlength="60">
+            </div>
+            <div class="tpl-text-group">
+              <label>Subtext <span style="color:var(--gray-600);font-weight:400;text-transform:none;letter-spacing:0;">(optional)</span></label>
+              <input class="tpl-text-input" id="tplSubtextInput" type="text" placeholder="Supporting text..." maxlength="40">
+            </div>
+          </div>
+
+          <!-- Image Upload (visible after template selected) -->
+          <div class="tpl-upload-section" id="tplUploadSection">
+            <div class="tpl-step-label">Your Image</div>
+            <div class="tpl-upload-zone" id="tplUploadZone">
+              <input type="file" class="tpl-upload-input" id="tplImageInput" accept="image/*">
+              <div class="tpl-upload-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="3" y="3" width="18" height="18" rx="2"/>
+                  <circle cx="8.5" cy="8.5" r="1.5"/>
+                  <polyline points="21 15 16 10 5 21"/>
+                </svg>
+              </div>
+              <div class="tpl-upload-text" id="tplUploadLabel">
+                Upload your image <span>PNG, JPG — add a person, product, or graphic</span>
+              </div>
+              <button class="tpl-upload-remove" id="tplUploadRemove" type="button">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+              </button>
+            </div>
+
+            <!-- Image Controls (visible after upload) -->
+            <div class="tpl-img-controls" id="tplImgControls">
+              <!-- BG Remove -->
+              <button class="tpl-bg-remove-btn" id="tplBgRemoveBtn" type="button">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M5 3a2 2 0 0 0-2 2"/>
+                  <path d="M19 3a2 2 0 0 1 2 2"/>
+                  <path d="M21 19a2 2 0 0 1-2 2"/>
+                  <path d="M5 21a2 2 0 0 1-2-2"/>
+                  <path d="M9 3h1"/>
+                  <path d="M9 21h1"/>
+                  <path d="M14 3h1"/>
+                  <path d="M14 21h1"/>
+                  <path d="M3 9v1"/>
+                  <path d="M3 14v1"/>
+                  <path d="M21 9v1"/>
+                  <path d="M21 14v1"/>
+                </svg>
+                Remove Background
+              </button>
+              <div class="tpl-bg-status" id="tplBgStatus"></div>
+
+              <!-- Scale + Opacity sliders -->
+              <div class="tpl-img-slider-row">
+                <div class="tpl-img-slider-group">
+                  <div class="tpl-img-slider-label">Scale <span class="tpl-img-slider-val" id="tplImgScaleVal">80%</span></div>
+                  <input type="range" class="tpl-img-slider" id="tplImgScale" min="20" max="150" value="80">
+                </div>
+                <div class="tpl-img-slider-group">
+                  <div class="tpl-img-slider-label">Opacity <span class="tpl-img-slider-val" id="tplImgOpacityVal">100%</span></div>
+                  <input type="range" class="tpl-img-slider" id="tplImgOpacity" min="10" max="100" value="100">
+                </div>
+              </div>
+
+              <!-- Position presets -->
+              <div class="tpl-img-slider-label" style="margin-bottom:-4px">Position</div>
+              <div class="tpl-img-pos-row">
+                <button class="tpl-img-pos-btn" data-tpl-pos="left">Left</button>
+                <button class="tpl-img-pos-btn active" data-tpl-pos="center">Center</button>
+                <button class="tpl-img-pos-btn" data-tpl-pos="right">Right</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- RIGHT: Preview Stage -->
+        <div class="tpl-preview">
+          <div class="thumb-preview-header">
+            <div class="canvas-title">
+              <div class="live-dot"></div>
+              Live Preview
+            </div>
+          </div>
+
+          <div class="tpl-preview-stage" id="tplPreviewStage">
+            <div class="tpl-preview-canvas" id="tplPreviewCanvas">
+
+              <!-- Format badge -->
+              <div class="tpl-preview-format-badge" id="tplFormatBadge"></div>
+
+              <!-- Empty state — visual landing -->
+              <div class="tpl-preview-empty" id="tplPreviewEmpty">
+                <div class="tpl-empty-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="3" y="3" width="18" height="18" rx="2"/>
+                    <path d="M3 9h18"/>
+                    <path d="M9 21V9"/>
+                  </svg>
+                </div>
+                <div class="tpl-empty-title">Start creating</div>
+                <div class="tpl-empty-sub">Select a format and template to build<br>beautiful HighLevel assets in seconds</div>
+                <button class="tpl-empty-cta" id="tplEmptyCta" type="button">Choose a Template</button>
+              </div>
+
+              <!-- Active preview layers -->
+              <img class="tpl-preview-bg" id="tplPreviewBg" src="" alt="" style="display:none">
+              <img class="tpl-preview-img" id="tplPreviewImg" src="" alt="" style="display:none">
+              <div class="tpl-preview-overlay" id="tplPreviewOverlay" style="display:none">
+                <div class="tpl-preview-headline" id="tplPreviewHeadline">YOUR TEXT HERE</div>
+                <div class="tpl-preview-sub" id="tplPreviewSub">HighLevel</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- WORKSPACE: THUMBNAIL MODE — Two Column (hidden by default) -->
+      <div class="workspace thumb-workspace" id="thumbWorkspace" style="display:none">
+
+        <!-- LEFT: Controls -->
+        <div class="thumb-controls">
+
+          <!-- Shaun Selector -->
+          <div class="shaun-selector">
+            <div class="shaun-selector-label">Select Shaun</div>
+            <div class="shaun-scroll" id="shaunScroll">
+              <!-- Populated by JS from SHAUN_ASSETS -->
+            </div>
+            <!-- Shaun position controls -->
+            <div class="shaun-pos-row" id="shaunPosRow" style="display:none">
+              <span class="shaun-pos-label">Shaun Position</span>
+              <div class="shaun-pos-buttons">
+                <button class="thumb-pos-btn" data-shaun-pos="left">Left</button>
+                <button class="thumb-pos-btn" data-shaun-pos="center">Center</button>
+                <button class="thumb-pos-btn active" data-shaun-pos="right">Right</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Headline + Subtext -->
+          <div class="thumb-inputs">
+            <div class="thumb-input-group">
+              <label>Headline <span class="thumb-word-count" id="thumbWordCount">0 words</span></label>
+              <input class="input-field lg" id="thumbHeadline" type="text" placeholder="Enter bold headline..." maxlength="60">
+            </div>
+            <div class="thumb-input-group">
+              <label>Subtext <span style="color:var(--gray-600);font-weight:400;text-transform:none;letter-spacing:0;">(optional)</span></label>
+              <input class="input-field" id="thumbSubtext" type="text" placeholder="Supporting text..." maxlength="40">
+            </div>
+          </div>
+
+          <!-- Screenshot Upload + Controls -->
+          <div class="thumb-screenshot-section">
+            <div class="thumb-upload-zone" id="thumbUploadZone">
+              <input type="file" class="thumb-upload-input" id="thumbScreenshotInput" accept="image/*">
+              <div class="thumb-upload-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="3" y="3" width="18" height="18" rx="2"/>
+                  <circle cx="8.5" cy="8.5" r="1.5"/>
+                  <polyline points="21 15 16 10 5 21"/>
+                </svg>
+              </div>
+              <div class="thumb-upload-text" id="thumbUploadLabel">
+                Upload screenshot <span>PNG, JPG — appears behind Shaun</span>
+              </div>
+              <button class="thumb-upload-remove" id="thumbUploadRemove" type="button">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+              </button>
+            </div>
+            <!-- Sliders (visible after upload) -->
+            <div class="thumb-sliders" id="thumbSliders">
+              <div class="thumb-slider-group">
+                <div class="thumb-slider-label">Opacity <span class="thumb-slider-val" id="thumbOpacityVal">70%</span></div>
+                <input type="range" class="thumb-slider" id="thumbOpacity" min="10" max="100" value="70">
+              </div>
+              <div class="thumb-slider-group">
+                <div class="thumb-slider-label">Radius <span class="thumb-slider-val" id="thumbRadiusVal">12px</span></div>
+                <input type="range" class="thumb-slider" id="thumbRadius" min="0" max="40" value="12">
+              </div>
+              <div class="thumb-slider-group">
+                <div class="thumb-slider-label">Scale <span class="thumb-slider-val" id="thumbScaleVal">60%</span></div>
+                <input type="range" class="thumb-slider" id="thumbScale" min="30" max="100" value="60">
+              </div>
+            </div>
+            <!-- Position presets (visible after upload) -->
+            <div class="thumb-pos-presets" id="thumbPosPresets">
+              <button class="thumb-pos-btn active" data-pos="center">Center</button>
+              <button class="thumb-pos-btn" data-pos="left">Slight Left</button>
+              <button class="thumb-pos-btn" data-pos="right">Slight Right</button>
+              <button class="thumb-pos-btn" data-pos="tilted">Tilted</button>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- RIGHT: Live Preview -->
+        <div class="thumb-preview">
+          <div class="thumb-preview-header">
+            <div class="canvas-title">
+              <div class="live-dot"></div>
+              Live Preview
+            </div>
+          </div>
+          <div class="thumb-preview-body">
+            <div class="thumb-canvas-wrap">
+              <div class="thumb-canvas" id="thumbCanvas">
+                <img class="thumb-canvas-bg" id="thumbCanvasBg" src=":brand:assets:/Background:Dark/Type=Core Gradient.png" alt="">
+                <img class="thumb-canvas-screenshot" id="thumbCanvasScreenshot" src="" alt="">
+                <img class="thumb-canvas-shaun pos-right" id="thumbCanvasShaun" src="" alt="" style="display:none">
+                <div class="thumb-canvas-text" id="thumbCanvasText">
+                  <div class="thumb-canvas-headline" id="thumbCanvasHeadline"></div>
+                  <div class="thumb-canvas-subtext" id="thumbCanvasSubtext"></div>
+                </div>
+                <div class="thumb-canvas-empty" id="thumbCanvasEmpty">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="2" y="3" width="20" height="14" rx="2"/>
+                    <circle cx="7.5" cy="10" r="1.5"/>
+                    <path d="M22 13l-4-4-5 5"/>
+                  </svg>
+                  <p>Select a Shaun photo and type a headline</p>
+                  <span>Your thumbnail will preview here</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ═══════════════════════════════════════════════════════════
+    // ENGINE ARCHITECTURE
+    // Two modes with clear boundaries:
+    //   CREATE  = flexible, brand-system-driven (Templates, AI Image)
+    //   PACKS   = fixed, curated, no randomization (Creative Packs)
+    // ═══════════════════════════════════════════════════════════
+
+    const ENGINE = {
+      sections: {
+        create: {
+          id: 'create',
+          label: 'Create',
+          pages: ['templates', 'ai-image'],
+          // CREATE uses the full brand system: BRAND, brandAssets, assetMap
+          // Allowed: AI generation, layout variation, flexible composition
+          // Source: brand guidelines + asset registry
+          usesBrandSystem: true,
+          allowsAI: true,
+          allowsRandomization: true,
+        },
+        packs: {
+          id: 'packs',
+          label: 'Creative Packs',
+          pages: ['shaun-thumbnails', 'content-army', 'super-promo', 'master-class', 'certified-admin'],
+          // PACKS use their own locked configs — never the flexible brand system
+          // Forbidden: AI layout, random templates, dynamic styling
+          // Source: CREATIVE_PACKS config (fixed templates per pack)
+          usesBrandSystem: false,
+          allowsAI: false,
+          allowsRandomization: false,
+        },
+      },
+
+      // Determine which section a page belongs to
+      getSectionForPage(page) {
+        for (const [key, section] of Object.entries(this.sections)) {
+          if (section.pages.includes(page)) return section;
+        }
+        return this.sections.create; // default
+      },
+
+      // Guard: is this page allowed to use the brand system?
+      canUseBrandSystem(page) {
+        return this.getSectionForPage(page).usesBrandSystem;
+      },
+
+      // Guard: is this page allowed to use AI generation?
+      canUseAI(page) {
+        return this.getSectionForPage(page).allowsAI;
+      },
+
+      // Guard: is randomization allowed?
+      canRandomize(page) {
+        return this.getSectionForPage(page).allowsRandomization;
+      },
+    };
+
+
+    // ═══════════════════════════════════════════════════════════
+    // HIGHLEVEL BRAND SYSTEM CONFIG — CREATE SECTION ONLY
+    // Used by: Templates, AI Image
+    // NOT used by: Creative Packs (they have their own locked config)
+    // ═══════════════════════════════════════════════════════════
+
+    const BRAND = {
+      colors: {
+        deepBlue:     '#07223D',
+        bgBlue:       '#095DC3',
+        teal:         '#00B2A9',   // PMS 319 C
+        electricBlue: '#2896FB',
+        ctaYellow:    '#FFD000',
+        green:        '#17D94B',
+        white:        '#FFFFFF',
+        dark:         '#030B17',
+      },
+
+      gradients: {
+        // App / UI backgrounds
+        appBg:        'linear-gradient(160deg, #030B17 0%, #07223D 40%, #0A3366 70%, #07223D 100%)',
+        sidebarGlow:  'radial-gradient(ellipse at 50% 0%, rgba(0,178,169,0.06) 0%, transparent 50%)',
+        panelSheen:   'linear-gradient(180deg, rgba(0,178,169,0.03) 0%, transparent 40%, rgba(40,150,251,0.02) 100%)',
+
+        // Glow orbs (for layered backgrounds)
+        tealOrb:      'radial-gradient(ellipse, rgba(0,178,169,0.25) 0%, transparent 70%)',
+        blueOrb:      'radial-gradient(ellipse, rgba(40,150,251,0.2) 0%, transparent 70%)',
+        deepOrb:      'radial-gradient(ellipse, rgba(9,93,195,0.15) 0%, transparent 60%)',
+
+        // Button gradients
+        primaryBtn:   'linear-gradient(135deg, #095DC3, #2896FB)',
+        ctaBtn:       'linear-gradient(135deg, #FFD000, #FFAA00)',
+
+        // Thumbnail template backgrounds
+        thumbBg1:     'linear-gradient(135deg, #07223D 0%, #0A3366 50%, #095DC3 100%)',
+        thumbBg2:     'linear-gradient(135deg, #030B17 0%, #07223D 60%, #0A3366 100%)',
+        thumbBg3:     'radial-gradient(ellipse at 50% 60%, #095DC3 0%, #07223D 70%)',
+        thumbBg4:     'linear-gradient(135deg, #07223D 0%, #0D2847 100%)',
+        thumbBg5:     'linear-gradient(135deg, #095DC3 0%, #2896FB 50%, #095DC3 100%)',
+        thumbBg6:     'linear-gradient(135deg, #FFD000 0%, #FF8C00 30%, #07223D 60%, #030B17 100%)',
+      },
+
+      typography: {
+        family: "'Inter', -apple-system, BlinkMacSystemFont, sans-serif",
+        headline:     { weight: 800, letterSpacing: '-0.5px' },
+        body:         { weight: 500, letterSpacing: '0' },
+        label:        { weight: 600, letterSpacing: '1px', transform: 'uppercase', size: '11px' },
+        thumbHeadline:{ weight: 900, transform: 'uppercase', lineHeight: 0.92 },
+        thumbSubtext: { weight: 700, transform: 'uppercase', lineHeight: 1.1 },
+      },
+
+      spacing: {
+        thumbPad: '8%',
+        cardGap: '16px',
+        gridGap: '16px',
+        sectionGap: '28px',
+      },
+
+      effects: {
+        // Glow shadows (box-shadow values)
+        glowTeal:      '0 0 30px rgba(0,178,169,0.4)',
+        glowBlue:      '0 0 30px rgba(40,150,251,0.35)',
+        glowYellow:    '0 0 20px rgba(255,208,0,0.4)',
+        glowDeep:      '0 0 40px rgba(9,93,195,0.3)',
+
+        // Image filter for subject cutouts
+        subjectGlow:   'drop-shadow(0 0 24px rgba(0,178,169,0.5)) drop-shadow(0 4px 16px rgba(0,0,0,0.5))',
+        subjectGlowAlt:'drop-shadow(0 0 20px rgba(40,150,251,0.4)) drop-shadow(0 4px 12px rgba(0,0,0,0.4))',
+
+        // Panel shadows
+        panelShadow:   '0 20px 60px rgba(0,0,0,0.4)',
+        cardShadow:    '0 8px 32px rgba(0,0,0,0.3)',
+        cardHover:     '0 16px 48px rgba(0,0,0,0.4), 0 0 40px rgba(0,178,169,0.08)',
+
+        // Glass
+        glassBg:       'rgba(255,255,255,0.04)',
+        glassBorder:   'rgba(255,255,255,0.06)',
+        glassBlur:     'blur(24px) saturate(150%)',
+      },
+
+      // Rules (documented for code consumers)
+      rules: {
+        backgrounds:  'Blue gradients dominate. Teal/blue orbs for depth. No flat grays.',
+        accents:      'Teal (PMS 319 C) for highlights, glows, active states. Never as fill.',
+        cta:          'Yellow #FFD000 ONLY for call-to-action buttons. Never decorative.',
+        contrast:     'Always high. White text on dark. Dark text on yellow CTA.',
+        mixing:       'Max 2 brand colors per surface. Do not combine teal + yellow.',
+      },
+    };
+
+
+    // ═══════════════════════════════════════════════════════════
+    // BRAND ASSET REGISTRY — CREATE SECTION ONLY
+    // Every file in :brand:assets:/ cataloged by category
+    // Used by: Templates, AI Image
+    // NOT used by: Creative Packs
+    // ═══════════════════════════════════════════════════════════
+
+    const brandAssets = {
+      backgrounds: {
+        dark: [
+          { id: 'centered-planet',         file: ':brand:assets:/Background:Dark/Type=Centered Planet.png',            desc: 'Centered planet with orbital rings' },
+          { id: 'core-gradient',           file: ':brand:assets:/Background:Dark/Type=Core Gradient.png',              desc: 'Core blue gradient, no elements' },
+          { id: 'large-planet-br',         file: ':brand:assets:/Background:Dark/Type=Large Planet Bottom Right.png',  desc: 'Large planet bottom-right' },
+          { id: 'planet-br',              file: ':brand:assets:/Background:Dark/Type=Planet Bottom Right.png',         desc: 'Medium planet bottom-right' },
+          { id: 'planet-ray-br',          file: ':brand:assets:/Background:Dark/Type=Planet Ray Bottom Right.png',     desc: 'Planet with light ray bottom-right' },
+          { id: 'radial-shine-bl',        file: ':brand:assets:/Background:Dark/Type=Radial Shine Bottom Left.png',   desc: 'Radial shine bottom-left' },
+          { id: 'radial-shine-br',        file: ':brand:assets:/Background:Dark/Type=Radial Shine Bottom RIght.png',  desc: 'Radial shine bottom-right' },
+          { id: 'small-planet-br',        file: ':brand:assets:/Background:Dark/Type=Small Planet Bottom Right.png',  desc: 'Small planet bottom-right' },
+          { id: 'small-radial-right',     file: ':brand:assets:/Background:Dark/Type=Small Radial Shine Right.png',   desc: 'Small radial shine right side' },
+        ],
+        light: [
+          { id: 'centered-horizon',       file: ':brand:assets:/Light:Light:Background/Property 1=Centered Horizon.png', desc: 'Light horizon gradient' },
+          { id: 'neutral',                file: ':brand:assets:/Light:Light:Background/Property 1=Neutral.png',           desc: 'Neutral light background' },
+        ],
+      },
+
+      bundles: [
+        { id: 'narrow-capture',           file: ':brand:assets:/Bundles/Type=Narrow, Color=Capture Yellow.png',                      desc: 'Narrow shape, capture yellow',   color: 'yellow', type: 'narrow' },
+        { id: 'narrow-close',             file: ':brand:assets:/Bundles/Type=Narrow, Color=Close Green.png',                         desc: 'Narrow shape, close green',      color: 'green',  type: 'narrow' },
+        { id: 'narrow-nurture',           file: ':brand:assets:/Bundles/Type=Narrow, Color=Nurture Blue.png',                        desc: 'Narrow shape, nurture blue',     color: 'blue',   type: 'narrow' },
+        { id: 'frosted-capture',          file: ':brand:assets:/Bundles/Type=Product UI (Frosted), Color=Capture Yellow.png',        desc: 'Frosted UI, capture yellow',     color: 'yellow', type: 'frosted' },
+        { id: 'frosted-close',            file: ':brand:assets:/Bundles/Type=Product UI (Frosted), Color=Close Green.png',           desc: 'Frosted UI, close green',        color: 'green',  type: 'frosted' },
+        { id: 'frosted-nurture',          file: ':brand:assets:/Bundles/Type=Product UI (Frosted), Color=Nurture Blue.png',          desc: 'Frosted UI, nurture blue',       color: 'blue',   type: 'frosted' },
+        { id: 'wide-capture',             file: ':brand:assets:/Bundles/Type=Wide, Color=Capture Yellow.png',                        desc: 'Wide shape, capture yellow',     color: 'yellow', type: 'wide' },
+        { id: 'wide-close',               file: ':brand:assets:/Bundles/Type=Wide, Color=Close Green.png',                           desc: 'Wide shape, close green',        color: 'green',  type: 'wide' },
+        { id: 'wide-nurture',             file: ':brand:assets:/Bundles/Type=Wide, Color=Nurture Blue.png',                          desc: 'Wide shape, nurture blue',       color: 'blue',   type: 'wide' },
+      ],
+
+      highly: [
+        { id: 'flying',                   file: ':brand:assets:/Highly/Highly_Flying 1.png',               desc: 'Highly mascot flying' },
+        { id: 'hi',                       file: ':brand:assets:/Highly/Highly_Hi 1.png',                   desc: 'Highly mascot waving hi' },
+        { id: 'grab-right',               file: ':brand:assets:/Highly/Highly_Pose_GrabRight 1.png',       desc: 'Highly mascot grabbing right' },
+      ],
+
+      icons: [
+        { id: 'capture-dark',             file: ':brand:assets:/Icons/Icons/Icon=Capture, Glass=Dark, Color=None (Glass).png',       desc: 'Capture icon, dark glass',       glass: 'dark',   action: 'capture' },
+        { id: 'capture-medium',           file: ':brand:assets:/Icons/Icons/Icon=Capture, Glass=Medium, Color=None (Glass).png',     desc: 'Capture icon, medium glass',     glass: 'medium', action: 'capture' },
+        { id: 'close-medium',             file: ':brand:assets:/Icons/Icons/Icon=Close, Glass=Medium, Color=None (Glass).png',       desc: 'Close icon, medium glass',       glass: 'medium', action: 'close' },
+        { id: 'evangelize-medium',        file: ':brand:assets:/Icons/Icons/Icon=Evangelize, Glass=Medium, Color=None (Glass).png',  desc: 'Evangelize icon, medium glass',  glass: 'medium', action: 'evangelize' },
+        { id: 'nurture-medium',           file: ':brand:assets:/Icons/Icons/Icon=Nurture, Glass=Medium, Color=None (Glass).png',     desc: 'Nurture icon, medium glass',     glass: 'medium', action: 'nurture' },
+        { id: 'reactivate-medium',        file: ':brand:assets:/Icons/Icons/Icon=Reactivate, Glass=Medium, Color=None (Glass).png',  desc: 'Reactivate icon, medium glass',  glass: 'medium', action: 'reactivate' },
+      ],
+
+      logos: {
+        horizontal: [
+          { id: 'full-dark-blue',         file: ':brand:assets:/Logos/Lockup=Full Horizontal, Color=AllDarkBlue.png', desc: 'Full logo, all dark blue',  theme: 'dark' },
+          { id: 'full-white',             file: ':brand:assets:/Logos/Lockup=Full Horizontal, Color=AllWhite.png',    desc: 'Full logo, all white',      theme: 'light' },
+          { id: 'full-dark',              file: ':brand:assets:/Logos/Lockup=Full Horizontal, Color=Dark.png',        desc: 'Full logo, dark variant',   theme: 'dark' },
+          { id: 'full-light',             file: ':brand:assets:/Logos/Lockup=Full Horizontal, Color=Light.png',       desc: 'Full logo, light variant',  theme: 'light' },
+        ],
+        icon: [
+          { id: 'icon-dark',              file: ':brand:assets:/Logos/Lockup=Icon, Color=Dark.png',                   desc: 'Icon only, dark',           theme: 'dark' },
+          { id: 'icon-full',              file: ':brand:assets:/Logos/Lockup=Icon, Color=Full.png',                   desc: 'Icon only, full color',     theme: 'any' },
+          { id: 'icon-light',             file: ':brand:assets:/Logos/Lockup=Icon, Color=Light.png',                  desc: 'Icon only, light',          theme: 'light' },
+        ],
+        wordmark: [
+          { id: 'wordmark-dark',          file: ':brand:assets:/Logos/Lockup=Wordmark, Color=Dark.png',               desc: 'Wordmark, dark',            theme: 'dark' },
+          { id: 'wordmark-light',         file: ':brand:assets:/Logos/Lockup=Wordmark, Color=Light.png',              desc: 'Wordmark, light',           theme: 'light' },
+        ],
+        shapes: [
+          { id: 'circle-dark',            file: ':brand:assets:/Logos/Shape=Circle, Color=OnDarkBlue.png',            desc: 'Circle badge, dark bg',     theme: 'dark' },
+          { id: 'circle-white',           file: ':brand:assets:/Logos/Shape=Circle, Color=OnWhite.png',               desc: 'Circle badge, white bg',    theme: 'light' },
+          { id: 'rounded-sq-dark',        file: ':brand:assets:/Logos/Shape=Light Mode Rounded Square, Color=OnDarkBlue.png', desc: 'Rounded square, dark bg', theme: 'dark' },
+          { id: 'rounded-sq-white',       file: ':brand:assets:/Logos/Shape=RoundedSquare, Color=OnWhite.png',        desc: 'Rounded square, white bg',  theme: 'light' },
+          { id: 'square-dark',            file: ':brand:assets:/Logos/Shape=Square, Color=OnDarkBlue.png',            desc: 'Square badge, dark bg',     theme: 'dark' },
+          { id: 'square-white',           file: ':brand:assets:/Logos/Shape=Square, Color=OnWhite.png',               desc: 'Square badge, white bg',    theme: 'light' },
+        ],
+      },
+
+      orbits: {
+        sixRing: [
+          { id: '6r-backer',              file: ':brand:assets:/Orbits/Rings=6 Ring, Color=Backer.png',               desc: '6-ring, backer color',      color: 'backer' },
+          { id: '6r-capture',             file: ':brand:assets:/Orbits/Rings=6 Ring, Color=Capture.png',              desc: '6-ring, capture yellow',    color: 'capture' },
+          { id: '6r-close',               file: ':brand:assets:/Orbits/Rings=6 Ring, Color=Close.png',                desc: '6-ring, close green',       color: 'close' },
+          { id: '6r-dark',                file: ':brand:assets:/Orbits/Rings=6 Ring, Color=Dark.png',                 desc: '6-ring, dark',              color: 'dark' },
+          { id: '6r-engine-light',        file: ':brand:assets:/Orbits/Rings=6 Ring, Color=Engine Light.png',         desc: '6-ring, engine light',      color: 'engine-light' },
+          { id: '6r-nurture',             file: ':brand:assets:/Orbits/Rings=6 Ring, Color=Nurture.png',              desc: '6-ring, nurture blue',      color: 'nurture' },
+          { id: '6r-standard',            file: ':brand:assets:/Orbits/Rings=6 Ring, Color=Standard.png',             desc: '6-ring, standard',          color: 'standard' },
+        ],
+        eightRing: [
+          { id: '8r-backer',              file: ':brand:assets:/Orbits/Rings=8 Ring, Color=Backer.png',               desc: '8-ring, backer color',      color: 'backer' },
+          { id: '8r-capture',             file: ':brand:assets:/Orbits/Rings=8 Ring, Color=Capture.png',              desc: '8-ring, capture yellow',    color: 'capture' },
+          { id: '8r-close',               file: ':brand:assets:/Orbits/Rings=8 Ring, Color=Close.png',                desc: '8-ring, close green',       color: 'close' },
+          { id: '8r-engine-dark',         file: ':brand:assets:/Orbits/Rings=8 Ring, Color=Engine Dark.png',          desc: '8-ring, engine dark',       color: 'engine-dark' },
+          { id: '8r-engine-light',        file: ':brand:assets:/Orbits/Rings=8 Ring, Color=Engine Light.png',         desc: '8-ring, engine light',      color: 'engine-light' },
+          { id: '8r-nurture',             file: ':brand:assets:/Orbits/Rings=8 Ring, Color=Nurture.png',              desc: '8-ring, nurture blue',      color: 'nurture' },
+          { id: '8r-standard',            file: ':brand:assets:/Orbits/Rings=8 Ring, Color=Standard.png',             desc: '8-ring, standard',          color: 'standard' },
+        ],
+      },
+    };
+
+
+    // ═══════════════════════════════════════════════════════════
+    // ASSET MAPPING SYSTEM — CREATE SECTION ONLY
+    // Defines HOW each asset category should be used.
+    // Enforces intentional placement — no random usage.
+    // Used by: Templates, AI Image
+    // NOT used by: Creative Packs
+    // ═══════════════════════════════════════════════════════════
+
+    const assetMap = {
+
+      // ── BACKGROUNDS ──────────────────────────────────────────
+      // Role: Full-bleed canvas/thumbnail backgrounds
+      // Usage: One per composition. Cover entire surface.
+      // Positioning: object-fit: cover, absolute inset 0
+      backgrounds: {
+        role: 'Full canvas backgrounds',
+        placement: { position: 'absolute', inset: '0', objectFit: 'cover', zIndex: 0 },
+        rules: [
+          'Only ONE background per composition',
+          'Dark backgrounds for thumbnails + canvas (default)',
+          'Light backgrounds only for light-mode variants',
+          'Never layer two backgrounds together',
+        ],
+        // Select the right background for a given context
+        select(context) {
+          const { theme = 'dark', style = 'gradient' } = context;
+          const pool = theme === 'light' ? brandAssets.backgrounds.light : brandAssets.backgrounds.dark;
+
+          // Intentional selection based on composition style
+          const styleMap = {
+            'gradient':    ['core-gradient'],
+            'planet':      ['centered-planet', 'planet-br', 'large-planet-br', 'small-planet-br'],
+            'shine':       ['radial-shine-bl', 'radial-shine-br', 'small-radial-right'],
+            'dramatic':    ['planet-ray-br'],
+            'neutral':     ['neutral', 'centered-horizon'],
+          };
+
+          const preferred = styleMap[style] || styleMap['gradient'];
+          const matches = pool.filter(a => preferred.includes(a.id));
+          return matches.length > 0 ? matches[Math.floor(Math.random() * matches.length)] : pool[0];
+        },
+      },
+
+      // ── ORBITS ───────────────────────────────────────────────
+      // Role: Decorative background elements (rings/circles)
+      // Usage: Behind subject, adds depth + movement
+      // Positioning: Centered or offset, large scale, low opacity
+      orbits: {
+        role: 'Decorative background ring elements',
+        placement: { position: 'absolute', objectFit: 'contain', zIndex: 1, opacity: 0.3 },
+        rules: [
+          'Always BEHIND subjects, never on top',
+          'Use at 30-50% opacity for subtlety',
+          'Center in composition or offset to one side',
+          'Scale to 60-100% of container height',
+          'Max ONE orbit element per composition',
+          '6-ring for tighter compositions, 8-ring for wider',
+        ],
+        // Select orbit by ring count and color context
+        select(context) {
+          const { rings = 6, colorTheme = 'standard' } = context;
+          const pool = rings === 8 ? brandAssets.orbits.eightRing : brandAssets.orbits.sixRing;
+          const match = pool.find(a => a.color === colorTheme);
+          return match || pool.find(a => a.color === 'standard') || pool[0];
+        },
+        // Get CSS for positioning an orbit in a composition
+        getStyle(position = 'center') {
+          const positions = {
+            'center':       { top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: '80%' },
+            'right':        { top: '50%', right: '-10%', transform: 'translateY(-50%)', width: '70%' },
+            'left':         { top: '50%', left: '-10%', transform: 'translateY(-50%)', width: '70%' },
+            'bottom-right': { bottom: '-15%', right: '-15%', width: '65%' },
+            'top-left':     { top: '-15%', left: '-15%', width: '65%' },
+          };
+          return { ...this.placement, ...positions[position] };
+        },
+      },
+
+      // ── HIGHLY (MASCOT) ──────────────────────────────────────
+      // Role: Character/mascot for playful compositions
+      // Usage: Focal element, similar to subject photos
+      // Positioning: Prominent, with glow effect
+      highly: {
+        role: 'Brand mascot for playful/fun compositions',
+        placement: { position: 'absolute', objectFit: 'contain', zIndex: 5 },
+        rules: [
+          'Use for playful/fun brand moments only',
+          'Never combine mascot + person subject in same composition',
+          'Apply same glow treatment as subject photos',
+          'Position as focal point — same rules as subject cutouts',
+          'Max ONE mascot per composition',
+        ],
+        select(context) {
+          const { mood = 'friendly' } = context;
+          const moodMap = {
+            'friendly': 'hi',
+            'energetic': 'flying',
+            'action': 'grab-right',
+          };
+          const preferred = moodMap[mood] || 'hi';
+          return brandAssets.highly.find(a => a.id === preferred) || brandAssets.highly[0];
+        },
+      },
+
+      // ── BUNDLES ──────────────────────────────────────────────
+      // Role: Layered decorative shapes / UI element overlays
+      // Usage: Background decoration or feature highlight
+      // Positioning: Accent layer between background and subject
+      bundles: {
+        role: 'Layered decorative shapes and UI elements',
+        placement: { position: 'absolute', objectFit: 'contain', zIndex: 2, opacity: 0.85 },
+        rules: [
+          'Use as accent layer between background and subject',
+          'Frosted variants for UI-showcase compositions',
+          'Narrow variants for vertical accent strips',
+          'Wide variants for horizontal feature bands',
+          'Color must match composition intent: yellow=capture, green=close, blue=nurture',
+          'Max ONE bundle per composition',
+        ],
+        select(context) {
+          const { intent = 'nurture', variant = 'wide' } = context;
+          const colorMap = { capture: 'yellow', close: 'green', nurture: 'blue' };
+          const color = colorMap[intent] || 'blue';
+          return brandAssets.bundles.find(a => a.type === variant && a.color === color)
+              || brandAssets.bundles.find(a => a.color === color)
+              || brandAssets.bundles[0];
+        },
+      },
+
+      // ── ICONS ────────────────────────────────────────────────
+      // Role: Small UI elements, feature indicators
+      // Usage: Inline or floating small accents
+      // Positioning: Fixed size (24–48px), part of UI, not composition
+      icons: {
+        role: 'Small UI elements and feature indicators',
+        placement: { objectFit: 'contain', zIndex: 8 },
+        rules: [
+          'Use at small sizes only (24–48px)',
+          'Place in UI chrome, not in canvas compositions',
+          'Dark glass variant for dark backgrounds',
+          'Medium glass variant for lighter surfaces',
+          'Represent HighLevel product actions (capture, close, nurture, etc.)',
+          'Do NOT use as decorative background elements',
+        ],
+        select(context) {
+          const { action = 'capture', glass = 'medium' } = context;
+          return brandAssets.icons.find(a => a.action === action && a.glass === glass)
+              || brandAssets.icons.find(a => a.action === action)
+              || brandAssets.icons[0];
+        },
+      },
+
+      // ── LOGOS ────────────────────────────────────────────────
+      // Role: Brand identification / watermark
+      // Usage: Corner placement in compositions, header in UI
+      // Positioning: Small, unobtrusive, contextual theme
+      logos: {
+        role: 'Brand identification and placement',
+        placement: { objectFit: 'contain', zIndex: 9 },
+        rules: [
+          'Use light variant on dark backgrounds (default)',
+          'Use dark variant on light backgrounds',
+          'Horizontal lockup for wide spaces (headers, footers)',
+          'Icon lockup for tight spaces (corners, avatars)',
+          'Wordmark when icon is already present nearby',
+          'Shape variants for social/badges only',
+          'Never stretch or distort',
+          'Minimum clear space: 1x icon width on all sides',
+        ],
+        // Select logo by context
+        select(context) {
+          const { lockup = 'horizontal', background = 'dark' } = context;
+          const theme = background === 'dark' ? 'light' : 'dark';
+          const pool = brandAssets.logos[lockup] || brandAssets.logos.horizontal;
+          return pool.find(a => a.theme === theme) || pool.find(a => a.theme === 'any') || pool[0];
+        },
+        // Convenience: get the right logo for thumbnail corner watermark
+        forThumbnail() {
+          return this.select({ lockup: 'horizontal', background: 'dark' });
+        },
+        // Convenience: get icon for sidebar/UI
+        forUI() {
+          return this.select({ lockup: 'icon', background: 'dark' });
+        },
+      },
+    };
+
+
+    // ═══════════════════════════════════════════════════════════
+    // SHAUN CUTOUT ASSETS — Creative Pack: "Shaun Comin Atcha"
+    // Fixed asset list. No substitution. No AI generation.
+    // ═══════════════════════════════════════════════════════════
+
+    const SHAUN_ASSETS = [
+      { id: 'pointing-up-right', file: ':assets:shaun:/ShaunClark_03057_StudioSura-Photoroom.png', desc: 'Pointing up-right, black HighLevel tee',     pose: 'pointing' },
+      { id: 'pointing-up',       file: ':assets:shaun:/ShaunClark_03096_StudioSura-Photoroom.png', desc: 'Pointing up enthusiastically, black tee',     pose: 'pointing' },
+      { id: 'thinking',          file: ':assets:shaun:/ShaunClark_03141_StudioSura-Photoroom.png', desc: 'Hand on chin thinking, black tee',            pose: 'thinking' },
+      { id: 'looking-up',        file: ':assets:shaun:/ShaunClark_03182_StudioSura-Photoroom.png', desc: 'Hand on chin looking up, black tee',          pose: 'thinking' },
+      { id: 'holding-phone',     file: ':assets:shaun:/ShaunClark_03235_StudioSura-Photoroom.png', desc: 'Holding phone/device, green tee',             pose: 'product' },
+      { id: 'pointing-phone',    file: ':assets:shaun:/ShaunClark_03269_StudioSura-Photoroom.png', desc: 'Pointing at phone, green tee',                pose: 'product' },
+    ];
+
+
+    // ═══════════════════════════════════════════════════════════
+    // COMPOSITION PRESETS — CREATE SECTION ONLY
+    // Pre-defined asset combinations for Templates & AI Image.
+    // Ensures intentional pairing — not random assembly.
+    // NOT used by Creative Packs (they have their own locked configs)
+    // ═══════════════════════════════════════════════════════════
+
+    const compositionPresets = {
+      // Template 1: Subject left + big text right
+      // Best with: pointing poses, planet backgrounds, orbit rings behind subject
+      tpl1: {
+        background:  { style: 'gradient' },
+        orbit:       { rings: 6, colorTheme: 'standard', position: 'left' },
+        subject:     { side: 'left', preferPose: ['pointing'] },
+        logo:        { lockup: 'horizontal', position: 'bottom-right' },
+      },
+
+      // Template 2: Subject right + text left
+      // Best with: thinking poses, dark background, blue glow orb
+      tpl2: {
+        background:  { style: 'shine' },
+        orbit:       { rings: 8, colorTheme: 'nurture', position: 'right' },
+        subject:     { side: 'right', preferPose: ['thinking'] },
+        logo:        { lockup: 'horizontal', position: 'bottom-left' },
+      },
+
+      // Template 3: Subject center + massive headline
+      // Best with: energetic poses, radial background, centered orbit
+      tpl3: {
+        background:  { style: 'planet' },
+        orbit:       { rings: 8, colorTheme: 'standard', position: 'center' },
+        subject:     { side: 'center', preferPose: ['pointing'] },
+        logo:        { lockup: 'icon', position: 'top-left' },
+      },
+
+      // Template 4: UI background + subject overlay
+      // Best with: product poses, grid background, frosted bundle accent
+      tpl4: {
+        background:  { style: 'gradient' },
+        orbit:       null, // No orbit for UI-style
+        bundle:      { intent: 'nurture', variant: 'frosted' },
+        subject:     { side: 'right', preferPose: ['product'] },
+        logo:        { lockup: 'horizontal', position: 'top-left' },
+      },
+
+      // Template 5: Gradient + CTA focus
+      // Best with: pointing poses, bold gradient, yellow CTA accent
+      tpl5: {
+        background:  { style: 'shine' },
+        orbit:       { rings: 6, colorTheme: 'capture', position: 'left' },
+        subject:     { side: 'left', preferPose: ['pointing', 'product'] },
+        logo:        { lockup: 'icon', position: 'top-right' },
+      },
+
+      // Template 6: Announcement style
+      // Best with: any dynamic pose, dramatic background
+      tpl6: {
+        background:  { style: 'dramatic' },
+        orbit:       { rings: 6, colorTheme: 'dark', position: 'right' },
+        subject:     { side: 'right', preferPose: ['pointing', 'thinking'] },
+        logo:        { lockup: 'horizontal', position: 'bottom-left' },
+      },
+    };
+
+
+    // ═══════════════════════════════════════════════════════════
+    // CREATIVE PACKS — FIXED SYSTEMS
+    // Each pack has locked templates. No AI. No randomization.
+    // Outputs must be identical every time for the same inputs.
+    // ═══════════════════════════════════════════════════════════
+
+    const CREATIVE_PACKS = {
+
+      // ── Shaun Comin Atcha ────────────────────────────────────
+      // YouTube thumbnail pack. Shaun cutout + screenshot + headline.
+      // Fixed layout: bg → screenshot(z1) → Shaun(z3) → text(z4)
+      'shaun-thumbnails': {
+        id: 'shaun-thumbnails',
+        name: 'Shaun Comin Atcha',
+        description: 'YouTube thumbnails with Shaun Clark cutouts',
+        locked: true,       // Cannot be modified by brand system
+        aiGeneration: false, // No AI layout generation
+        randomize: false,    // No random template selection
+
+        // Fixed canvas spec — always 16:9, always 1280x720 export
+        canvas: {
+          aspectRatio: '16 / 9',
+          exportWidth: 1280,
+          exportHeight: 720,
+        },
+
+        // Fixed z-index layers — never changes
+        layers: {
+          background:  { zIndex: 0, source: 'brand-bg-dark' },
+          screenshot:  { zIndex: 1, optional: true },
+          shaun:       { zIndex: 3, required: true },
+          text:        { zIndex: 4, position: 'bottom-center' },
+        },
+
+        // Fixed Shaun positions — only these three options
+        positions: ['left', 'center', 'right'],
+        defaultPosition: 'right',
+
+        // Assets are loaded from SHAUN_ASSETS — no substitution
+        assetSource: 'SHAUN_ASSETS',
+
+        // Fixed background — always Core Gradient
+        background: ':brand:assets:/Background:Dark/Type=Core Gradient.png',
+
+        // Text styling — locked, not customizable
+        textStyle: {
+          headline: {
+            fontFamily: 'Poppins',
+            fontWeight: 900,
+            textTransform: 'uppercase',
+            lineHeight: 0.92,
+            gradient: 'linear-gradient(180deg, #FFFFFF 30%, #B8D4F0 100%)',
+          },
+          subtext: {
+            fontFamily: 'Poppins',
+            fontWeight: 700,
+            textTransform: 'uppercase',
+            letterSpacing: '2px',
+            color: '#FFFFFF',
+          },
+        },
+      },
+
+      // ── Content Army ─────────────────────────────────────────
+      'content-army': {
+        id: 'content-army',
+        name: 'Content Army',
+        description: 'Social media content pack for HighLevel affiliates',
+        locked: true,
+        aiGeneration: false,
+        randomize: false,
+        status: 'coming-soon',
+      },
+
+      // ── Super Promo ──────────────────────────────────────────
+      'super-promo': {
+        id: 'super-promo',
+        name: 'Super Promo',
+        description: 'Promotional graphics for launches and offers',
+        locked: true,
+        aiGeneration: false,
+        randomize: false,
+        status: 'coming-soon',
+      },
+
+      // ── Master Class ─────────────────────────────────────────
+      'master-class': {
+        id: 'master-class',
+        name: 'Master Class',
+        description: 'Educational content thumbnails and banners',
+        locked: true,
+        aiGeneration: false,
+        randomize: false,
+        status: 'coming-soon',
+      },
+
+      // ── Certified Admin ──────────────────────────────────────
+      'certified-admin': {
+        id: 'certified-admin',
+        name: 'Certified Admin',
+        description: 'Certification badge and achievement graphics',
+        locked: true,
+        aiGeneration: false,
+        randomize: false,
+        status: 'coming-soon',
+      },
+    };
+
+
+    // ═══════════════════════════════════════════════════════════
+    // PACK HELPERS — Enforce fixed output rules
+    // ═══════════════════════════════════════════════════════════
+
+    function getPackConfig(page) {
+      return CREATIVE_PACKS[page] || null;
+    }
+
+    function isPackPage(page) {
+      return !!CREATIVE_PACKS[page];
+    }
+
+    function isPackLocked(page) {
+      const pack = CREATIVE_PACKS[page];
+      return pack ? pack.locked === true : false;
+    }
+
+    // Guard: prevent brand system from being applied to a pack
+    function assertNotPack(page, action) {
+      if (isPackPage(page)) {
+        console.warn(`[BrandEngine] Blocked: "${action}" is not allowed on Creative Pack "${page}". Packs use fixed templates only.`);
+        return false;
+      }
+      return true;
+    }
+
+
+    // ═══════════════════════════════════════════════════════════
+    // MODE SWITCHING (Design ↔ Thumbnails)
+    // ═══════════════════════════════════════════════════════════
+
+    let currentMode = 'design';    // 'design' | 'thumbnails'
+    let currentPage = 'templates'; // tracks which sidebar item is active
+    let selectedShaunId = null;
+
+    function setAppMode(mode, page) {
+      currentMode = mode;
+      if (page) currentPage = page;
+
+      const designWS = document.getElementById('designWorkspace');
+      const thumbWS = document.getElementById('thumbWorkspace');
+      const generateBtn = document.getElementById('generateBtn');
+      const exportWrap = document.getElementById('toolbarExportWrap');
+
+      // Determine section from ENGINE config
+      const section = ENGINE.getSectionForPage(currentPage);
+      const isPack = section.id === 'packs';
+
+      if (mode === 'thumbnails') {
+        designWS.style.display = 'none';
+        thumbWS.style.display = '';
+        if (generateBtn) generateBtn.style.display = 'none';
+        if (exportWrap) exportWrap.style.display = '';
+
+        // Load the pack — each pack loads its own fixed system
+        if (isPack) {
+          const packConfig = getPackConfig(currentPage);
+          if (packConfig && !packConfig.status) {
+            loadCreativePack(currentPage);
+          }
+        }
+      } else {
+        designWS.style.display = '';
+        thumbWS.style.display = 'none';
+        if (generateBtn) generateBtn.style.display = '';
+        if (exportWrap) exportWrap.style.display = '';
+      }
+    }
+
+    // Load a creative pack's fixed system
+    function loadCreativePack(page) {
+      const pack = getPackConfig(page);
+      if (!pack) return;
+
+      // Each pack has its own loader — dispatch by ID
+      switch (page) {
+        case 'shaun-thumbnails':
+          buildShaunSelector();
+          break;
+        // Future packs register their loaders here
+        default:
+          console.log(`[BrandEngine] Pack "${page}" has no loader yet.`);
+      }
+    }
+
+    // ── Build Shaun image selector ──
+    let shaunSelectorBuilt = false;
+    function buildShaunSelector() {
+      if (shaunSelectorBuilt) return;
+      shaunSelectorBuilt = true;
+      const scroll = document.getElementById('shaunScroll');
+      if (!scroll) return;
+      scroll.innerHTML = '';
+      SHAUN_ASSETS.forEach(asset => {
+        const el = document.createElement('div');
+        el.className = 'shaun-thumb';
+        el.dataset.id = asset.id;
+        el.innerHTML = `
+          <img src="${asset.file}" alt="${asset.desc}" loading="lazy">
+          <div class="shaun-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+          <div class="shaun-thumb-name">${asset.pose}</div>`;
+        el.addEventListener('click', () => selectShaun(asset.id, asset.file));
+        scroll.appendChild(el);
+      });
+    }
+
+    function selectShaun(id, file) {
+      selectedShaunId = id;
+      document.querySelectorAll('.shaun-thumb').forEach(t => t.classList.toggle('active', t.dataset.id === id));
+      // Show Shaun on canvas
+      const img = document.getElementById('thumbCanvasShaun');
+      if (img) { img.src = file; img.style.display = ''; }
+      // Hide empty state
+      const empty = document.getElementById('thumbCanvasEmpty');
+      if (empty) empty.style.display = 'none';
+      // Show Shaun position controls
+      const posRow = document.getElementById('shaunPosRow');
+      if (posRow) posRow.style.display = 'flex';
+
+
+    }
+
+    // ── Shaun position controls ──
+    document.querySelectorAll('[data-shaun-pos]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('[data-shaun-pos]').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        const pos = btn.dataset.shaunPos;
+        const shaun = document.getElementById('thumbCanvasShaun');
+        if (shaun) {
+          shaun.classList.remove('pos-left', 'pos-center', 'pos-right');
+          shaun.classList.add('pos-' + pos);
+        }
+      });
+    });
+
+    // ── Headline live preview + word counter ──
+    const thumbHeadlineInput = document.getElementById('thumbHeadline');
+    const thumbWordCountEl = document.getElementById('thumbWordCount');
+    const thumbSubtextInput = document.getElementById('thumbSubtext');
+
+    function updateCanvasText() {
+      const h = document.getElementById('thumbCanvasHeadline');
+      const s = document.getElementById('thumbCanvasSubtext');
+      if (h) h.textContent = thumbHeadlineInput ? thumbHeadlineInput.value : '';
+      if (s) s.textContent = thumbSubtextInput ? thumbSubtextInput.value : '';
+      // Hide empty if we have text or shaun
+      const empty = document.getElementById('thumbCanvasEmpty');
+      if (empty && (thumbHeadlineInput.value.trim() || selectedShaunId)) {
+        empty.style.display = 'none';
+      }
+    }
+
+    if (thumbHeadlineInput) {
+      thumbHeadlineInput.addEventListener('input', () => {
+        const words = thumbHeadlineInput.value.trim().split(/\s+/).filter(w => w.length > 0);
+        const count = words.length;
+        if (thumbWordCountEl) {
+          thumbWordCountEl.textContent = count + ' word' + (count !== 1 ? 's' : '');
+          thumbWordCountEl.style.color = (count >= 3 && count <= 6) ? '#00B2A9' : '';
+        }
+        updateCanvasText();
+  
+  
+      });
+    }
+
+    if (thumbSubtextInput) {
+      thumbSubtextInput.addEventListener('input', updateCanvasText);
+    }
+
+    // ── Screenshot upload + controls ──
+    const screenshotInput = document.getElementById('thumbScreenshotInput');
+    const screenshotCanvas = document.getElementById('thumbCanvasScreenshot');
+    const uploadZone = document.getElementById('thumbUploadZone');
+    const uploadLabel = document.getElementById('thumbUploadLabel');
+    const uploadRemove = document.getElementById('thumbUploadRemove');
+    const slidersWrap = document.getElementById('thumbSliders');
+    const posPresetsWrap = document.getElementById('thumbPosPresets');
+    let screenshotUrl = null;
+
+    function applyScreenshotStyle() {
+      if (!screenshotCanvas || !screenshotUrl) return;
+      const opacity = document.getElementById('thumbOpacity').value / 100;
+      const radius = document.getElementById('thumbRadius').value;
+      const scale = document.getElementById('thumbScale').value / 100;
+      const activePos = document.querySelector('.thumb-pos-btn.active');
+      const pos = activePos ? activePos.dataset.pos : 'center';
+
+      // Always enforce behind-Shaun layer
+      screenshotCanvas.style.zIndex = '1';
+      screenshotCanvas.style.opacity = opacity;
+      screenshotCanvas.style.borderRadius = radius + 'px';
+      screenshotCanvas.style.width = (scale * 100) + '%';
+      screenshotCanvas.style.height = 'auto';
+      screenshotCanvas.style.maxHeight = '80%';
+
+      // Base position: vertically centered, horizontally by preset
+      screenshotCanvas.style.top = '48%';
+      screenshotCanvas.style.left = '40%';
+      screenshotCanvas.style.right = 'auto';
+      screenshotCanvas.style.transform = 'translate(-50%, -50%)';
+
+      if (pos === 'center') {
+        screenshotCanvas.style.left = '45%';
+        screenshotCanvas.style.transform = 'translate(-50%, -50%)';
+      } else if (pos === 'left') {
+        screenshotCanvas.style.left = '32%';
+        screenshotCanvas.style.transform = 'translate(-50%, -50%)';
+      } else if (pos === 'right') {
+        screenshotCanvas.style.left = '58%';
+        screenshotCanvas.style.transform = 'translate(-50%, -50%)';
+      } else if (pos === 'tilted') {
+        screenshotCanvas.style.left = '40%';
+        screenshotCanvas.style.transform = 'translate(-50%, -50%) perspective(800px) rotateY(8deg) rotateX(-2deg)';
+      }
+
+      // Update value labels
+      document.getElementById('thumbOpacityVal').textContent = Math.round(opacity * 100) + '%';
+      document.getElementById('thumbRadiusVal').textContent = radius + 'px';
+      document.getElementById('thumbScaleVal').textContent = Math.round(scale * 100) + '%';
+    }
+
+    if (screenshotInput) {
+      screenshotInput.addEventListener('change', (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+        screenshotUrl = URL.createObjectURL(file);
+        screenshotCanvas.src = screenshotUrl;
+        screenshotCanvas.style.display = 'block';
+        uploadZone.classList.add('has-file');
+        uploadLabel.innerHTML = file.name + '<span>' + Math.round(file.size / 1024) + ' KB</span>';
+        slidersWrap.classList.add('visible');
+        posPresetsWrap.classList.add('visible');
+        applyScreenshotStyle();
+      });
+    }
+
+    if (uploadRemove) {
+      uploadRemove.addEventListener('click', (e) => {
+        e.stopPropagation();
+        screenshotUrl = null;
+        screenshotCanvas.style.display = 'none';
+        screenshotCanvas.src = '';
+        uploadZone.classList.remove('has-file');
+        uploadLabel.innerHTML = 'Upload screenshot <span>PNG, JPG — appears behind Shaun</span>';
+        slidersWrap.classList.remove('visible');
+        posPresetsWrap.classList.remove('visible');
+        if (screenshotInput) screenshotInput.value = '';
+      });
+    }
+
+    // Sliders
+    ['thumbOpacity', 'thumbRadius', 'thumbScale'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.addEventListener('input', applyScreenshotStyle);
+    });
+
+    // Position presets
+    if (posPresetsWrap) {
+      posPresetsWrap.querySelectorAll('.thumb-pos-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          posPresetsWrap.querySelectorAll('.thumb-pos-btn').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          applyScreenshotStyle();
+        });
+      });
+    }
+
+    // Sidebar navigation + mode switching
+    document.querySelectorAll('.sidebar-item[data-page]').forEach(item => {
+      item.addEventListener('click', () => {
+        document.querySelectorAll('.sidebar-item[data-page]').forEach(i => i.classList.remove('active'));
+        item.classList.add('active');
+        const page = item.dataset.page;
+
+        // Determine mode from ENGINE config
+        const section = ENGINE.getSectionForPage(page);
+        if (section.id === 'packs' && CREATIVE_PACKS[page]) {
+          setAppMode('thumbnails', page);
+        } else {
+          setAppMode('design', page);
+        }
+      });
+    });
+
+    // ═══════════════════════════════════════════════════════════
+    // TEMPLATE PICKER — CREATE SECTION
+    // Uses brand system. Allows flexible sizing + 4 templates per size.
+    // ═══════════════════════════════════════════════════════════
+
+    const TPL_SIZES = {
+      social: [
+        { id: 'square',    label: 'Square',     dim: '1080 x 1080', ratio: '1 / 1',   w: 1080, h: 1080 },
+        { id: 'portrait',  label: 'Portrait',   dim: '1080 x 1350', ratio: '4 / 5',   w: 1080, h: 1350 },
+        { id: 'story',     label: 'Story',      dim: '1080 x 1920', ratio: '9 / 16',  w: 1080, h: 1920 },
+        { id: 'landscape', label: 'Landscape',  dim: '1200 x 628',  ratio: '1200/628', w: 1200, h: 628 },
+      ],
+      ads: [
+        { id: 'leaderboard', label: 'Leaderboard',    dim: '728 x 90',   ratio: '728/90',  w: 728,  h: 90  },
+        { id: 'rectangle',   label: 'Med Rectangle',  dim: '300 x 250',  ratio: '300/250', w: 300,  h: 250 },
+        { id: 'wide',        label: 'Wide Banner',    dim: '1200 x 628', ratio: '1200/628', w: 1200, h: 628 },
+        { id: 'yt-thumb',    label: 'YT Thumbnail',   dim: '1280 x 720', ratio: '16 / 9',  w: 1280, h: 720 },
+      ],
+      presentation: [
+        { id: 'slide-16-9',  label: 'Widescreen',     dim: '1920 x 1080', ratio: '16 / 9',  w: 1920, h: 1080 },
+        { id: 'slide-4-3',   label: 'Standard',       dim: '1024 x 768',  ratio: '4 / 3',   w: 1024, h: 768  },
+        { id: 'slide-wide',  label: 'Ultra Wide',     dim: '2560 x 1080', ratio: '2560/1080', w: 2560, h: 1080 },
+        { id: 'slide-square',label: 'Square Slide',   dim: '1080 x 1080', ratio: '1 / 1',   w: 1080, h: 1080 },
+      ],
+    };
+
+    const TPL_TEMPLATES = {
+      social: {
+        square: [
+          { id: 'social-sq-1', name: 'Bold Statement',   headline: 'YOUR TEXT HERE', sub: 'HighLevel', bg: ':brand:assets:/Background:Dark/Type=Core Gradient.png' },
+          { id: 'social-sq-2', name: 'Planet Promo',      headline: 'YOUR TEXT HERE', sub: 'Powered by HighLevel', bg: ':brand:assets:/Background:Dark/Type=Centered Planet.png' },
+          { id: 'social-sq-3', name: 'Radial Focus',      headline: 'YOUR TEXT HERE', sub: 'HighLevel', bg: ':brand:assets:/Background:Dark/Type=Radial Shine Bottom Left.png' },
+          { id: 'social-sq-4', name: 'Clean Gradient',    headline: 'YOUR TEXT HERE', sub: 'Start Free', bg: ':brand:assets:/Background:Dark/Type=Small Radial Shine Right.png' },
+        ],
+        portrait: [
+          { id: 'social-pt-1', name: 'Story Impact',      headline: 'YOUR TEXT HERE', sub: 'HighLevel', bg: ':brand:assets:/Background:Dark/Type=Core Gradient.png' },
+          { id: 'social-pt-2', name: 'Planet Rise',        headline: 'YOUR TEXT HERE', sub: 'Learn More', bg: ':brand:assets:/Background:Dark/Type=Planet Bottom Right.png' },
+          { id: 'social-pt-3', name: 'Radial Glow',        headline: 'YOUR TEXT HERE', sub: 'HighLevel', bg: ':brand:assets:/Background:Dark/Type=Radial Shine Bottom RIght.png' },
+          { id: 'social-pt-4', name: 'Deep Space',         headline: 'YOUR TEXT HERE', sub: 'Get Started', bg: ':brand:assets:/Background:Dark/Type=Small Planet Bottom Right.png' },
+        ],
+        story: [
+          { id: 'social-st-1', name: 'Full Screen CTA',   headline: 'YOUR TEXT HERE', sub: 'Swipe Up', bg: ':brand:assets:/Background:Dark/Type=Core Gradient.png' },
+          { id: 'social-st-2', name: 'Planet Story',       headline: 'YOUR TEXT HERE', sub: 'HighLevel', bg: ':brand:assets:/Background:Dark/Type=Large Planet Bottom Right.png' },
+          { id: 'social-st-3', name: 'Ray Burst',          headline: 'YOUR TEXT HERE', sub: 'Learn More', bg: ':brand:assets:/Background:Dark/Type=Planet Ray Bottom Right.png' },
+          { id: 'social-st-4', name: 'Minimal Dark',       headline: 'YOUR TEXT HERE', sub: 'HighLevel', bg: ':brand:assets:/Background:Dark/Type=Small Radial Shine Right.png' },
+        ],
+        landscape: [
+          { id: 'social-ls-1', name: 'Wide Banner',        headline: 'YOUR TEXT HERE', sub: 'HighLevel', bg: ':brand:assets:/Background:Dark/Type=Core Gradient.png' },
+          { id: 'social-ls-2', name: 'Planet Wide',         headline: 'YOUR TEXT HERE', sub: 'Learn More', bg: ':brand:assets:/Background:Dark/Type=Centered Planet.png' },
+          { id: 'social-ls-3', name: 'Shine Right',         headline: 'YOUR TEXT HERE', sub: 'HighLevel', bg: ':brand:assets:/Background:Dark/Type=Radial Shine Bottom RIght.png' },
+          { id: 'social-ls-4', name: 'Clean Dark',          headline: 'YOUR TEXT HERE', sub: 'Start Free', bg: ':brand:assets:/Background:Dark/Type=Small Radial Shine Right.png' },
+        ],
+      },
+      ads: {
+        leaderboard: [
+          { id: 'ad-lb-1', name: 'Simple CTA',      headline: 'YOUR TEXT HERE', sub: 'Try Free', bg: ':brand:assets:/Background:Dark/Type=Core Gradient.png' },
+          { id: 'ad-lb-2', name: 'Gradient Bar',     headline: 'YOUR TEXT HERE', sub: 'Learn More', bg: ':brand:assets:/Background:Dark/Type=Small Radial Shine Right.png' },
+          { id: 'ad-lb-3', name: 'Planet Strip',     headline: 'YOUR TEXT HERE', sub: 'HighLevel', bg: ':brand:assets:/Background:Dark/Type=Planet Bottom Right.png' },
+          { id: 'ad-lb-4', name: 'Clean Navy',       headline: 'YOUR TEXT HERE', sub: 'Get Started', bg: ':brand:assets:/Background:Dark/Type=Core Gradient.png' },
+        ],
+        rectangle: [
+          { id: 'ad-rect-1', name: 'Display Box',    headline: 'YOUR TEXT HERE', sub: 'Try Free', bg: ':brand:assets:/Background:Dark/Type=Core Gradient.png' },
+          { id: 'ad-rect-2', name: 'Planet Box',     headline: 'YOUR TEXT HERE', sub: 'HighLevel', bg: ':brand:assets:/Background:Dark/Type=Centered Planet.png' },
+          { id: 'ad-rect-3', name: 'Shine Box',      headline: 'YOUR TEXT HERE', sub: 'Learn More', bg: ':brand:assets:/Background:Dark/Type=Radial Shine Bottom Left.png' },
+          { id: 'ad-rect-4', name: 'Deep Box',       headline: 'YOUR TEXT HERE', sub: 'Start Free', bg: ':brand:assets:/Background:Dark/Type=Small Planet Bottom Right.png' },
+        ],
+        wide: [
+          { id: 'ad-wide-1', name: 'Wide CTA',       headline: 'YOUR TEXT HERE', sub: 'Try Free', bg: ':brand:assets:/Background:Dark/Type=Core Gradient.png' },
+          { id: 'ad-wide-2', name: 'Planet Banner',   headline: 'YOUR TEXT HERE', sub: 'HighLevel', bg: ':brand:assets:/Background:Dark/Type=Large Planet Bottom Right.png' },
+          { id: 'ad-wide-3', name: 'Radial Banner',   headline: 'YOUR TEXT HERE', sub: 'Learn More', bg: ':brand:assets:/Background:Dark/Type=Radial Shine Bottom RIght.png' },
+          { id: 'ad-wide-4', name: 'Minimal Banner',  headline: 'YOUR TEXT HERE', sub: 'Get Started', bg: ':brand:assets:/Background:Dark/Type=Small Radial Shine Right.png' },
+        ],
+        'yt-thumb': [
+          { id: 'ad-yt-1', name: 'Thumbnail Bold',   headline: 'YOUR TEXT HERE', sub: 'Watch Now', bg: ':brand:assets:/Background:Dark/Type=Core Gradient.png' },
+          { id: 'ad-yt-2', name: 'Thumbnail Planet',  headline: 'YOUR TEXT HERE', sub: 'HighLevel', bg: ':brand:assets:/Background:Dark/Type=Planet Ray Bottom Right.png' },
+          { id: 'ad-yt-3', name: 'Thumbnail Glow',    headline: 'YOUR TEXT HERE', sub: 'New Video', bg: ':brand:assets:/Background:Dark/Type=Radial Shine Bottom Left.png' },
+          { id: 'ad-yt-4', name: 'Thumbnail Clean',   headline: 'YOUR TEXT HERE', sub: 'Must Watch', bg: ':brand:assets:/Background:Dark/Type=Centered Planet.png' },
+        ],
+      },
+      presentation: {
+        'slide-16-9': [
+          { id: 'pres-16-1', name: 'Keynote Dark',     headline: 'YOUR TEXT HERE', sub: 'Presented by HighLevel', bg: ':brand:assets:/Background:Dark/Type=Core Gradient.png' },
+          { id: 'pres-16-2', name: 'Planet Stage',      headline: 'YOUR TEXT HERE', sub: 'HighLevel', bg: ':brand:assets:/Background:Dark/Type=Centered Planet.png' },
+          { id: 'pres-16-3', name: 'Radial Spotlight',   headline: 'YOUR TEXT HERE', sub: 'Key Insights', bg: ':brand:assets:/Background:Dark/Type=Radial Shine Bottom Left.png' },
+          { id: 'pres-16-4', name: 'Deep Blue Stage',    headline: 'YOUR TEXT HERE', sub: 'HighLevel', bg: ':brand:assets:/Background:Dark/Type=Large Planet Bottom Right.png' },
+        ],
+        'slide-4-3': [
+          { id: 'pres-43-1', name: 'Classic Dark',      headline: 'YOUR TEXT HERE', sub: 'HighLevel', bg: ':brand:assets:/Background:Dark/Type=Core Gradient.png' },
+          { id: 'pres-43-2', name: 'Planet Classic',     headline: 'YOUR TEXT HERE', sub: 'Overview', bg: ':brand:assets:/Background:Dark/Type=Planet Bottom Right.png' },
+          { id: 'pres-43-3', name: 'Glow Classic',       headline: 'YOUR TEXT HERE', sub: 'HighLevel', bg: ':brand:assets:/Background:Dark/Type=Radial Shine Bottom RIght.png' },
+          { id: 'pres-43-4', name: 'Minimal Classic',    headline: 'YOUR TEXT HERE', sub: 'Next Steps', bg: ':brand:assets:/Background:Dark/Type=Small Radial Shine Right.png' },
+        ],
+        'slide-wide': [
+          { id: 'pres-uw-1', name: 'Ultra Keynote',     headline: 'YOUR TEXT HERE', sub: 'HighLevel', bg: ':brand:assets:/Background:Dark/Type=Core Gradient.png' },
+          { id: 'pres-uw-2', name: 'Ultra Planet',       headline: 'YOUR TEXT HERE', sub: 'Summit 2026', bg: ':brand:assets:/Background:Dark/Type=Large Planet Bottom Right.png' },
+          { id: 'pres-uw-3', name: 'Ultra Ray',          headline: 'YOUR TEXT HERE', sub: 'HighLevel', bg: ':brand:assets:/Background:Dark/Type=Planet Ray Bottom Right.png' },
+          { id: 'pres-uw-4', name: 'Ultra Clean',        headline: 'YOUR TEXT HERE', sub: 'Key Takeaways', bg: ':brand:assets:/Background:Dark/Type=Small Planet Bottom Right.png' },
+        ],
+        'slide-square': [
+          { id: 'pres-sq-1', name: 'Square Deck',       headline: 'YOUR TEXT HERE', sub: 'HighLevel', bg: ':brand:assets:/Background:Dark/Type=Core Gradient.png' },
+          { id: 'pres-sq-2', name: 'Square Planet',      headline: 'YOUR TEXT HERE', sub: 'Case Study', bg: ':brand:assets:/Background:Dark/Type=Centered Planet.png' },
+          { id: 'pres-sq-3', name: 'Square Glow',        headline: 'YOUR TEXT HERE', sub: 'HighLevel', bg: ':brand:assets:/Background:Dark/Type=Radial Shine Bottom Left.png' },
+          { id: 'pres-sq-4', name: 'Square Minimal',     headline: 'YOUR TEXT HERE', sub: 'Summary', bg: ':brand:assets:/Background:Dark/Type=Small Radial Shine Right.png' },
+        ],
+      },
+    };
+
+    let tplSelectedCat = 'social';
+    let tplSelectedSize = null;
+    let tplSelectedSizeObj = null;
+    let tplSelectedTemplate = null;
+    let tplUploadedImageSrc = null;       // original uploaded image (data URL)
+    let tplProcessedImageSrc = null;      // after bg removal (data URL)
+    let tplUsingProcessed = false;        // true when bg-removed version active
+    let tplImgPosition = 'center';
+    let tplImgScale = 80;
+    let tplImgOpacity = 100;
+
+    function initTemplatePicker() {
+      // Category cards
+      document.querySelectorAll('.tpl-cat-card').forEach(card => {
+        card.addEventListener('click', () => {
+          document.querySelectorAll('.tpl-cat-card').forEach(c => c.classList.remove('active'));
+          card.classList.add('active');
+          tplSelectedCat = card.dataset.cat;
+          tplSelectedSize = null;
+          tplSelectedSizeObj = null;
+          tplSelectedTemplate = null;
+          renderSizes();
+          clearTemplateGrid();
+          resetTemplatePreview();
+          hideTplEditorSections();
+        });
+      });
+
+      // Image upload
+      const uploadInput = document.getElementById('tplImageInput');
+      const uploadZone = document.getElementById('tplUploadZone');
+      const removeBtn = document.getElementById('tplUploadRemove');
+
+      if (uploadInput) {
+        uploadInput.addEventListener('change', handleTplImageUpload);
+      }
+      if (removeBtn) {
+        removeBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          clearTplImage();
+        });
+      }
+
+      // Image scale slider
+      const scaleSlider = document.getElementById('tplImgScale');
+      const opacitySlider = document.getElementById('tplImgOpacity');
+      if (scaleSlider) {
+        scaleSlider.addEventListener('input', () => {
+          tplImgScale = parseInt(scaleSlider.value);
+          document.getElementById('tplImgScaleVal').textContent = tplImgScale + '%';
+          updateTplPreviewImage();
+        });
+      }
+      if (opacitySlider) {
+        opacitySlider.addEventListener('input', () => {
+          tplImgOpacity = parseInt(opacitySlider.value);
+          document.getElementById('tplImgOpacityVal').textContent = tplImgOpacity + '%';
+          updateTplPreviewImage();
+        });
+      }
+
+      // Image position buttons
+      document.querySelectorAll('.tpl-img-pos-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          document.querySelectorAll('.tpl-img-pos-btn').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          tplImgPosition = btn.dataset.tplPos;
+          updateTplPreviewImage();
+        });
+      });
+
+      // BG removal button
+      const bgRemoveBtn = document.getElementById('tplBgRemoveBtn');
+      if (bgRemoveBtn) {
+        bgRemoveBtn.addEventListener('click', handleTplBgRemoval);
+      }
+
+      // Text inputs — live update preview
+      const headlineInput = document.getElementById('tplHeadlineInput');
+      const subtextInput = document.getElementById('tplSubtextInput');
+      if (headlineInput) {
+        headlineInput.addEventListener('input', () => {
+          const el = document.getElementById('tplPreviewHeadline');
+          if (el) el.textContent = headlineInput.value || tplSelectedTemplate?.headline || 'YOUR TEXT HERE';
+        });
+      }
+      if (subtextInput) {
+        subtextInput.addEventListener('input', () => {
+          const el = document.getElementById('tplPreviewSub');
+          if (el) el.textContent = subtextInput.value || tplSelectedTemplate?.sub || 'HighLevel';
+        });
+      }
+
+      // CTA button in empty state — focus the size dropdown
+      const emptyCta = document.getElementById('tplEmptyCta');
+      if (emptyCta) {
+        emptyCta.addEventListener('click', () => {
+          const sizeSelect = document.querySelector('.tpl-size-select');
+          if (sizeSelect) {
+            sizeSelect.focus();
+            sizeSelect.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          }
+        });
+      }
+
+      renderSizes();
+    }
+
+    function hideTplEditorSections() {
+      const textSec = document.getElementById('tplTextSection');
+      const uploadSec = document.getElementById('tplUploadSection');
+      if (textSec) textSec.classList.remove('visible');
+      if (uploadSec) uploadSec.classList.remove('visible');
+      clearTplImage();
+    }
+
+    function showTplEditorSections() {
+      const textSec = document.getElementById('tplTextSection');
+      const uploadSec = document.getElementById('tplUploadSection');
+      if (textSec) textSec.classList.add('visible');
+      if (uploadSec) uploadSec.classList.add('visible');
+    }
+
+    function handleTplImageUpload(e) {
+      const file = e.target.files?.[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = (evt) => {
+        tplUploadedImageSrc = evt.target.result;
+        tplProcessedImageSrc = null;
+        tplUsingProcessed = false;
+
+        // Update upload zone UI
+        const zone = document.getElementById('tplUploadZone');
+        const label = document.getElementById('tplUploadLabel');
+        const controls = document.getElementById('tplImgControls');
+        const status = document.getElementById('tplBgStatus');
+        const bgBtn = document.getElementById('tplBgRemoveBtn');
+
+        if (zone) zone.classList.add('has-file');
+        if (label) {
+          label.innerHTML = `${file.name} <span>${(file.size / 1024).toFixed(0)} KB</span>`;
+        }
+        if (controls) controls.classList.add('visible');
+        if (status) { status.textContent = ''; status.className = 'tpl-bg-status'; }
+        if (bgBtn) {
+          bgBtn.disabled = false;
+          bgBtn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 3a2 2 0 0 0-2 2"/><path d="M19 3a2 2 0 0 1 2 2"/><path d="M21 19a2 2 0 0 1-2 2"/><path d="M5 21a2 2 0 0 1-2-2"/><path d="M9 3h1"/><path d="M9 21h1"/><path d="M14 3h1"/><path d="M14 21h1"/><path d="M3 9v1"/><path d="M3 14v1"/><path d="M21 9v1"/><path d="M21 14v1"/></svg> Remove Background`;
+        }
+
+        // Show image in preview
+        updateTplPreviewImage();
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function clearTplImage() {
+      tplUploadedImageSrc = null;
+      tplProcessedImageSrc = null;
+      tplUsingProcessed = false;
+
+      const zone = document.getElementById('tplUploadZone');
+      const input = document.getElementById('tplImageInput');
+      const label = document.getElementById('tplUploadLabel');
+      const controls = document.getElementById('tplImgControls');
+      const previewImg = document.getElementById('tplPreviewImg');
+      const status = document.getElementById('tplBgStatus');
+
+      if (zone) zone.classList.remove('has-file');
+      if (input) input.value = '';
+      if (label) label.innerHTML = 'Upload your image <span>PNG, JPG — add a person, product, or graphic</span>';
+      if (controls) controls.classList.remove('visible');
+      if (previewImg) previewImg.style.display = 'none';
+      if (status) { status.textContent = ''; status.className = 'tpl-bg-status'; }
+    }
+
+    function updateTplPreviewImage() {
+      const previewImg = document.getElementById('tplPreviewImg');
+      if (!previewImg) return;
+
+      const src = tplUsingProcessed ? tplProcessedImageSrc : tplUploadedImageSrc;
+      if (!src) {
+        previewImg.style.display = 'none';
+        return;
+      }
+
+      previewImg.src = src;
+      previewImg.style.display = '';
+
+      // Scale
+      const pct = tplImgScale;
+      previewImg.style.width = pct + '%';
+      previewImg.style.height = pct + '%';
+
+      // Opacity
+      previewImg.style.opacity = tplImgOpacity / 100;
+
+      // Position
+      switch (tplImgPosition) {
+        case 'left':
+          previewImg.style.left = '0';
+          previewImg.style.right = 'auto';
+          previewImg.style.top = '50%';
+          previewImg.style.transform = 'translateY(-50%)';
+          break;
+        case 'right':
+          previewImg.style.left = 'auto';
+          previewImg.style.right = '0';
+          previewImg.style.top = '50%';
+          previewImg.style.transform = 'translateY(-50%)';
+          break;
+        case 'center':
+        default:
+          previewImg.style.left = '50%';
+          previewImg.style.right = 'auto';
+          previewImg.style.top = '50%';
+          previewImg.style.transform = 'translate(-50%, -50%)';
+          break;
+      }
+    }
+
+    async function handleTplBgRemoval() {
+      if (!tplUploadedImageSrc) return;
+
+      const btn = document.getElementById('tplBgRemoveBtn');
+      const status = document.getElementById('tplBgStatus');
+
+      // If already processed, toggle back to original
+      if (tplProcessedImageSrc && tplUsingProcessed) {
+        tplUsingProcessed = false;
+        updateTplPreviewImage();
+        if (btn) btn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 3a2 2 0 0 0-2 2"/><path d="M19 3a2 2 0 0 1 2 2"/><path d="M21 19a2 2 0 0 1-2 2"/><path d="M5 21a2 2 0 0 1-2-2"/><path d="M9 3h1"/><path d="M9 21h1"/><path d="M14 3h1"/><path d="M14 21h1"/><path d="M3 9v1"/><path d="M3 14v1"/><path d="M21 9v1"/><path d="M21 14v1"/></svg> Remove Background`;
+        if (status) { status.textContent = 'Showing original image'; status.className = 'tpl-bg-status'; }
+        return;
+      }
+
+      if (tplProcessedImageSrc) {
+        tplUsingProcessed = true;
+        updateTplPreviewImage();
+        if (btn) btn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h18"/><path d="M12 3v18"/></svg> Show Original`;
+        if (status) { status.textContent = 'Background removed'; status.className = 'tpl-bg-status success'; }
+        return;
+      }
+
+      // Process: show loading state
+      if (btn) {
+        btn.disabled = true;
+        btn.innerHTML = `<div class="spinner"></div> Removing background...`;
+      }
+      if (status) { status.textContent = 'First time may take a moment to load the AI model'; status.className = 'tpl-bg-status'; }
+
+      try {
+        // Convert data URL to blob
+        const response = await fetch(tplUploadedImageSrc);
+        const blob = await response.blob();
+
+        // Use @imgly/background-removal
+        if (!window.imglyRemoveBackground) {
+          throw new Error('Background removal model is still loading. Please wait a moment and try again.');
+        }
+        const resultBlob = await window.imglyRemoveBackground(blob);
+
+        // Convert result blob to data URL
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          tplProcessedImageSrc = e.target.result;
+          tplUsingProcessed = true;
+          updateTplPreviewImage();
+
+          if (btn) {
+            btn.disabled = false;
+            btn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h18"/><path d="M12 3v18"/></svg> Show Original`;
+          }
+          if (status) { status.textContent = 'Background removed successfully'; status.className = 'tpl-bg-status success'; }
+        };
+        reader.readAsDataURL(resultBlob);
+      } catch (err) {
+        console.error('[BrandEngine] BG removal failed:', err);
+        if (btn) {
+          btn.disabled = false;
+          btn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 3a2 2 0 0 0-2 2"/><path d="M19 3a2 2 0 0 1 2 2"/><path d="M21 19a2 2 0 0 1-2 2"/><path d="M5 21a2 2 0 0 1-2-2"/><path d="M9 3h1"/><path d="M9 21h1"/><path d="M14 3h1"/><path d="M14 21h1"/><path d="M3 9v1"/><path d="M3 14v1"/><path d="M21 9v1"/><path d="M21 14v1"/></svg> Retry Remove Background`;
+        }
+        if (status) { status.textContent = err.message || 'Failed — try a smaller image or different format'; status.className = 'tpl-bg-status'; }
+      }
+    }
+
+    function renderSizes() {
+      const container = document.getElementById('tplSizes');
+      if (!container) return;
+      const sizes = TPL_SIZES[tplSelectedCat] || [];
+      container.innerHTML = '';
+
+      const select = document.createElement('select');
+      select.className = 'tpl-size-select';
+
+      // Placeholder
+      const placeholder = document.createElement('option');
+      placeholder.value = '';
+      placeholder.textContent = 'Choose a size...';
+      placeholder.disabled = true;
+      placeholder.selected = true;
+      select.appendChild(placeholder);
+
+      sizes.forEach((size) => {
+        const opt = document.createElement('option');
+        opt.value = size.id;
+        opt.textContent = `${size.label}  —  ${size.dim}`;
+        select.appendChild(opt);
+      });
+
+      select.addEventListener('change', () => {
+        const chosen = sizes.find(s => s.id === select.value);
+        if (!chosen) return;
+        tplSelectedSize = chosen.id;
+        tplSelectedSizeObj = chosen;
+        tplSelectedTemplate = null;
+        renderTemplateGrid(chosen);
+        resetTemplatePreview();
+        hideTplEditorSections();
+      });
+
+      container.appendChild(select);
+    }
+
+    function clearTemplateGrid() {
+      const grid = document.getElementById('tplGrid');
+      const label = document.getElementById('tplGridLabel');
+      if (grid) grid.innerHTML = '';
+      if (label) label.style.display = 'none';
+    }
+
+    function resetTemplatePreview() {
+      const empty = document.getElementById('tplPreviewEmpty');
+      const bg = document.getElementById('tplPreviewBg');
+      const overlay = document.getElementById('tplPreviewOverlay');
+      const canvas = document.getElementById('tplPreviewCanvas');
+      const img = document.getElementById('tplPreviewImg');
+      const stage = document.getElementById('tplPreviewStage');
+      const badge = document.getElementById('tplFormatBadge');
+      if (empty) empty.style.display = '';
+      if (bg) bg.style.display = 'none';
+      if (overlay) overlay.style.display = 'none';
+      if (img) img.style.display = 'none';
+      if (canvas) canvas.style.setProperty('--tpl-preview-ratio', '1 / 1');
+      if (stage) stage.classList.remove('has-selection');
+      if (badge) badge.textContent = '';
+    }
+
+    function selectTemplate(tpl, sizeObj) {
+      tplSelectedTemplate = tpl;
+      tplSelectedSizeObj = sizeObj;
+
+      const empty = document.getElementById('tplPreviewEmpty');
+      const bg = document.getElementById('tplPreviewBg');
+      const overlay = document.getElementById('tplPreviewOverlay');
+      const headline = document.getElementById('tplPreviewHeadline');
+      const sub = document.getElementById('tplPreviewSub');
+      const canvas = document.getElementById('tplPreviewCanvas');
+      const stage = document.getElementById('tplPreviewStage');
+      const badge = document.getElementById('tplFormatBadge');
+
+      // Activate stage glow
+      if (stage) stage.classList.add('has-selection');
+
+      // Update format badge
+      if (badge) badge.textContent = `${sizeObj.label} · ${sizeObj.dim}`;
+
+      // Set preview aspect ratio to match selected size
+      if (canvas) canvas.style.setProperty('--tpl-preview-ratio', sizeObj.ratio);
+
+      // Show background
+      if (bg) {
+        bg.src = tpl.bg;
+        bg.style.display = '';
+      }
+
+      // Show overlay text — use custom input if available
+      const customHeadline = document.getElementById('tplHeadlineInput')?.value;
+      const customSub = document.getElementById('tplSubtextInput')?.value;
+      if (headline) headline.textContent = customHeadline || tpl.headline;
+      if (sub) sub.textContent = customSub || tpl.sub;
+      if (overlay) overlay.style.display = '';
+
+      // Hide empty state
+      if (empty) empty.style.display = 'none';
+
+      // Show editor sections (text + image upload)
+      showTplEditorSections();
+
+      // Restore image if one was uploaded
+      if (tplUploadedImageSrc) updateTplPreviewImage();
+
+      console.log(`[BrandEngine] Template selected: ${tpl.id} (${tpl.name}) at ${sizeObj.dim}`);
+    }
+
+    function renderTemplateGrid(sizeObj) {
+      const grid = document.getElementById('tplGrid');
+      const label = document.getElementById('tplGridLabel');
+      if (!grid) return;
+
+      const templates = TPL_TEMPLATES[tplSelectedCat]?.[sizeObj.id] || [];
+      grid.innerHTML = '';
+      if (label) label.style.display = templates.length ? '' : 'none';
+
+      templates.forEach(tpl => {
+        const card = document.createElement('div');
+        card.className = 'tpl-card';
+        card.innerHTML = `
+          <div class="tpl-card-preview" style="--tpl-ratio: ${sizeObj.ratio}">
+            <img src="${tpl.bg}" alt="" loading="lazy">
+            <div class="tpl-card-overlay">
+              <div class="tpl-card-headline">${tpl.headline}</div>
+              <div class="tpl-card-sub">${tpl.sub}</div>
+            </div>
+          </div>
+          <div class="tpl-card-info">
+            <div class="tpl-card-name">${tpl.name}</div>
+            <div class="tpl-card-meta">${sizeObj.dim}</div>
+          </div>`;
+        card.addEventListener('click', (event) => {
+          // Mark active in grid
+          grid.querySelectorAll('.tpl-card').forEach(c => c.classList.remove('active'));
+          card.classList.add('active');
+          selectTemplate(tpl, sizeObj);
+        });
+        grid.appendChild(card);
+      });
+    }
+
+    initTemplatePicker();
+
+    // ── Template preview export ──
+    async function exportTemplatePreview(format) {
+      const canvas = document.getElementById('tplPreviewCanvas');
+      if (!canvas || !tplSelectedTemplate || !tplSelectedSizeObj) return;
+
+      const exportWidth = tplSelectedSizeObj.w || 1280;
+
+      try {
+        const result = await html2canvas(canvas, {
+          width: canvas.offsetWidth,
+          height: canvas.offsetHeight,
+          scale: exportWidth / canvas.offsetWidth,
+          useCORS: true,
+          allowTaint: true,
+          backgroundColor: null,
+        });
+
+        const link = document.createElement('a');
+        const name = (tplSelectedTemplate.name || 'design').replace(/\s+/g, '-').toLowerCase();
+        const ext = format === 'png' ? 'png' : 'jpg';
+        link.download = `brand-${name}-${tplSelectedSizeObj.id}.${ext}`;
+
+        if (format === 'png') {
+          link.href = result.toDataURL('image/png');
+        } else {
+          link.href = result.toDataURL('image/jpeg', 0.92);
+        }
+
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      } catch (err) {
+        console.error('[BrandEngine] Template export failed:', err);
+        alert('Export failed — check console for details.');
+      }
+    }
+
+    // ── Thumbnail export ──
+    // Uses pack config for export dimensions when in a Creative Pack
+    async function exportThumbnail(format) {
+      const canvas = document.getElementById('thumbCanvas');
+      if (!canvas) return;
+
+      // Get export dimensions from pack config (fixed) or default
+      const pack = isPackPage(currentPage) ? getPackConfig(currentPage) : null;
+      const exportWidth = pack?.canvas?.exportWidth || 1280;
+
+      try {
+        const result = await html2canvas(canvas, {
+          width: canvas.offsetWidth,
+          height: canvas.offsetHeight,
+          scale: exportWidth / canvas.offsetWidth,
+          useCORS: true,
+          allowTaint: true,
+          backgroundColor: null,
+        });
+
+        const link = document.createElement('a');
+        const headline = (thumbHeadlineInput?.value || 'thumbnail').trim().replace(/\s+/g, '-').toLowerCase().slice(0, 40);
+        const packName = pack ? pack.id : 'brand';
+        const ext = format === 'png' ? 'png' : 'jpg';
+        link.download = `${packName}-${headline}.${ext}`;
+
+        if (format === 'png') {
+          link.href = result.toDataURL('image/png');
+        } else {
+          link.href = result.toDataURL('image/jpeg', 0.92);
+        }
+
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      } catch (err) {
+        console.error('Export failed:', err);
+        alert('Export failed — check console for details.');
+      }
+    }
+
+    // ── Toolbar Export dropdown ──
+    const toolbarExportBtn = document.getElementById('toolbarExportBtn');
+    const toolbarExportDropdown = document.getElementById('toolbarExportDropdown');
+
+    if (toolbarExportBtn && toolbarExportDropdown) {
+      toolbarExportBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        toolbarExportDropdown.classList.toggle('open');
+      });
+
+      document.querySelectorAll('.toolbar-export-option').forEach(opt => {
+        opt.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const format = opt.dataset.exportFormat;
+          toolbarExportDropdown.classList.remove('open');
+          if (currentMode === 'thumbnails') {
+            exportThumbnail(format);
+          } else if (currentMode === 'design' && tplSelectedTemplate) {
+            exportTemplatePreview(format);
+          }
+        });
+      });
+
+      // Close dropdown on outside click
+      document.addEventListener('click', () => {
+        toolbarExportDropdown.classList.remove('open');
+      });
+    }
+
+    // (Zoom controls removed — design workspace now uses template picker)
+  </script>
+</body>
+</html>
